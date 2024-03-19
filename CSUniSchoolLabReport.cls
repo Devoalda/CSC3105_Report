@@ -73,8 +73,14 @@
 %	BIBLIOGRAPHY
 %----------------------------------------------------------------------------------------
 
+% \usepackage[
+% 	backend=biber, % Use the biber backend for compiling the bibliography
+% 	citestyle=authoryear, % In-text citation style
+% 	bibstyle=authoryear, % Bibliography style
+% ]{biblatex}
+
 \usepackage[
-	backend=biber, % Use the biber backend for compiling the bibliography
-	citestyle=authoryear, % In-text citation style
-	bibstyle=authoryear, % Bibliography style
+backend=biber,
+style=ieee,
 ]{biblatex}
+

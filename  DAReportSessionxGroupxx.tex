@@ -24,7 +24,10 @@
 	11pt, % Default font size, specify 10pt, 11pt or 12pt
 ]{CSUniSchoolLabReport}
 
+
 \addbibresource{sample.bib} % Bibliography file (located in the same folder as the template)
+
+\usepackage{enumitem}
 
 %----------------------------------------------------------------------------------------
 %	REPORT INFORMATION
@@ -48,6 +51,86 @@
 
 \maketitle % Insert the title, author and date using the information specified above
 
+% Maybe no need
+\section{Introduction}\label{introduction}
+In the realm of signal processing and analytics, a diverse array of operations is available for data preprocessing, model training (data mining), and visualization. Notably, signal data acquired from Ultra-Wideband (UWB) Internet of Things (IoT) sensors often exhibits inherent inaccuracies and susceptibility to noise and interference.
+
+\cite{Jiang2020AnUC} introduced a novel methodology for data preprocessing and denoising in their seminal work. Moreover, they advocated for the utilization of sophisticated unsupervised machine learning algorithms, including Support Vector Machines (SVM), Convolutional Neural Networks (CNN), and Multilayer Perceptrons (MLP), for modeling the intricate dynamics of the acquired data.
+
+Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
+
+\subsection{Objective}\label{objective}
+
+The primary aim of this assignment is to develop a model capable of discerning whether a given set of Channel Impulse Response (CIR) measurements corresponds to Line-of-Sight (LOS) or Non-Line-of-Sight (NLOS) scenarios. This entails the comprehensive execution of the three-dimensional process, encompassing Data Preprocessing, Data Mining, and Data Visualization. By diligently executing each phase of this process, the objective is to achieve a robust and insightful understanding of the dataset, culminating in the successful training of a model capable of accurate classification.
+
+
+\section{Data Preprocessing}\label{data_preprocessing}
+
+This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis.
+
+\begin{description}[style=nextline]
+    \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
+    \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
+    \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
+    \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
+    \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
+\end{description}
+
+\subsection{Feature Extraction}\label{feature_extraction}
+
+\subsection{Feature Derivation}\label{feature_derivation}
+
+\subsection{Feature Reduction}\label{feature_reduction}
+
+\subsection{De-Noise Functions}\label{de_noise_Functions}
+
+
+% Probably should just put diagrams and charts in data Visualization instead of here
+% Just put accuracy and justification?
+\section{Data Mining}\label{data_mining}
+
+In this section, various data mining techniques are employed to extract meaningful insights from the preprocessed data.
+
+\begin{description}[style=nextline]
+    \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
+    \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
+    \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
+    \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
+    \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
+\end{description}
+
+
+\subsection{Convolution Neural Network (CNN)}\label{cnn} 
+One approach is the implementation of Convolutional Neural Network (CNN) model using TensorFlow and Keras in Python. 
+
+\subsection{Multilayer Perceptron (MLP)}\label{mlp}
+Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for this project was driven by its ability to effectively manage intricate nonlinear relationships within the dataset. MLPs, characterized by multiple layers of nodes where each layer is fully connected to the next, excel at discerning complex patterns in data and making predictions based on acquired relationships.
+Another significant factor in choosing an MLP was its versatility in handling different types of data. MLPs can process both numerical and categorical data efficiently, making them suitable for datasets with a mix of signal strength, distance, and other categorical features. Additionally, MLPs offer scalability, allowing for the adjustment of the number of neurons and layers to accommodate varying levels of dataset complexity.
+
+\subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
+
+\subsection{Supervised Machine Learning Algorithms}\label{sml}
+
+\subsection{Unsupervised Machine Learning Algorithms}\label{uml}
+
+\section{Data Visualization}\label{data_visualisation}
+
+This section encompasses the graphical representation of data features and model architectures for enhanced comprehension.
+
+\begin{description}[style=nextline]
+    \item[Feature Visualization:] Visual depiction of both given and derived features for enhanced understanding.
+    \item[Convolution Neural Network:] Visual representation of CNN model architecture to facilitate interpretation.
+    \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
+\end{description}
+
+\subsection{Feature Visualization}\label{feature_visualization}
+
+
+\subsection{Convolution Neural Network}\label{cnn_visual}
+
+\subsection{Multilayer Perceptron}\label{mlp_visual}
+
+
 % \begin{center}
 % 	\begin{tabular}{l r}
 % 		Date Performed: & February 13, 2022 \\ % Date the experiment was performed
@@ -66,7 +149,11 @@
 %	OBJECTIVE
 %----------------------------------------------------------------------------------------
 
-\section{Objective}
+% \section{Objective}
+
+
+
+
 
 % To determine the atomic weight of magnesium via its reaction with oxygen and to study the stoichiometry of the reaction (as defined in \ref{definitions}):
 
@@ -82,8 +169,6 @@
 %	Objective 2 text
 %\end{description}
 
-\subsection{Definitions}\label{definitions} % Labels provide a point for referencing, in this case with \ref{definitions} to refer to this subsection number
-
 % \begin{description}
 % 	\item[Stoichiometry] The relationship between the relative quantities of substances taking part in a reaction or forming a compound, typically a ratio of whole integers.
 % 	\item[Atomic mass] The mass of an atom of a chemical element expressed in atomic mass units. It is approximately equivalent to the number of protons and neutrons in the atom (the mass number) or to the average number allowing for the relative abundances of different isotopes. 
@@ -93,7 +178,7 @@
 %	EXPERIMENTAL DATA
 %----------------------------------------------------------------------------------------
 
-\section{Experimental Data}
+% \section{Experimental Data}
 
 % \begin{tabular}{l l}
 % 	Mass of empty crucible & \SI{7.28}{\gram}\\ % Scientific/technical units are output using the \SI command, see the siunitx package documentation for more information on how to use this command
@@ -107,7 +192,7 @@
 %	SAMPLE CALCULATION
 %----------------------------------------------------------------------------------------
 
-\section{Sample Calculation}
+% \section{Sample Calculation}
 
 % \begin{tabular}{ll}
 % 	Mass of magnesium metal & = \SI{8.59}{\gram} - \SI{7.28}{\gram}\\
@@ -124,7 +209,7 @@
 %	RESULTS AND CONCLUSIONS
 %----------------------------------------------------------------------------------------
 
-\section{Results and Conclusions}
+% \section{Results and Conclusions}
 
 % The atomic weight of magnesium is concluded to be \SI{24}{\gram\per\mol}, as determined by the stoichiometry of its chemical combination with oxygen. This result is in agreement with the accepted value.
 
