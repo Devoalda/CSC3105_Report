@@ -25,9 +25,10 @@
 ]{CSUniSchoolLabReport}
 
 
-\addbibresource{sample.bib} % Bibliography file (located in the same folder as the template)
+\addbibresource{./references.bib} % Bibliography file (located in the same folder as the template)
 
 \usepackage{enumitem}
+\usepackage{hyperref}
 
 %----------------------------------------------------------------------------------------
 %	REPORT INFORMATION
@@ -51,13 +52,53 @@
 
 \maketitle % Insert the title, author and date using the information specified above
 
-% Maybe no need
+
+
+% START of Jovian's draft for JW's verdict ): %
+% DON TOUCH HERE unless u want to add on stuff %
+\section{Background}\label{background}
+
+\subsection{Emergence of IoT and Indoor Positioning Needs}\label{Emergence of IoT and Indoor Positioning Needs}
+The advent of the Internet of Things (IoT) has revolutionized how we interact with our environment, giving rise to an increased demand for precise Indoor Positioning Systems (IPS). Applications range from pedestrian tracking to autonomous drones in logistics and social distancing protocols, all requiring reliable localization technologies.
+
+\subsection{Limitations of GNSS in Indoor Environments}\label{Limitations of GNSS in Indoor Environments}
+While the Global Navigation Satelite System (GNSS) has been a cornerstone for ourdoor localization, its effectiveness is drastically reduced indoors due to signal attentuation by obstacles like walls, making it unsuitable for indoor use.
+
+\subsection{The Promise of UWB Technology}\label{The Promise of UWB Technology}
+Ultra-Wideband (UWB) technology, with its short pulse duration, offers high temporal resolution, enabling high accuracy in IPS. Nonetheless, the accuracy of Ultra-wideband (UWB) systems is compromised under Non-Line-Of-Sight (NLOS) conditions, where signal obstructions or reflections occur, presenting a substantial hurdle due to the resulting deterioration in localization precision.
+
+\subsection{Current NLOS Identification Methods}\label{Current NLOS Identification Methods}
+The academic and industrial sectors have explored numerous methodologies to mitigate the NLOS issue in UWB systems. These range from non-feature-based approaches, leveraging contextual information, to feature-based methods that extract distinct waveform characteristics to identify NLOS conditions using maching learning (ML) techniques.
+
+\subsection{Challenges and Limitations}\label{Challenges and Limitations}
+Although ML has emerged as a promising solution for NLOS identification, existing feature-based approaches face challenges, particularly with imbalanced datasets where NLOS samples are scarce. This affects the robustness of the classifiers being trained.
+
+\section{Introduction to the Project}\label{Introduction to the Project}
+Against this backdrop, our project aims to address the critical challenge of distinguishing between LOS and NLOS conditions in UWB-based IPS. We intend to train a machine learning model using the given dataset, with the ultimate goal of enhancing UWB localization accuracy irrespective of LOS or NLOS conditions. Acknowledging the limitations of traditional ML approaches in handling imbalanced data, we will explore a three-dimensional-process-centric approach over sheer accuracy metrics. This strategy focuses on developing a robust classifier that remains effective even with limited NLOS data, a common scenario in real-world applications.
+
+
 \section{Introduction}\label{introduction}
 In the realm of signal processing and analytics, a diverse array of operations is available for data preprocessing, model training (data mining), and visualization. Notably, signal data acquired from Ultra-Wideband (UWB) Internet of Things (IoT) sensors often exhibits inherent inaccuracies and susceptibility to noise and interference.
 
 \cite{Jiang2020AnUC} introduced a novel methodology for data preprocessing and denoising in their seminal work. Moreover, they advocated for the utilization of sophisticated unsupervised machine learning algorithms, including Support Vector Machines (SVM), Convolutional Neural Networks (CNN), and Multilayer Perceptrons (MLP), for modeling the intricate dynamics of the acquired data.
 
 Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
+
+An approach to calculate distance, as introduced by \cite{9870651}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+
+\begin{equation}
+\text{Total Distance} = \sum_{i=1}^{n} |CIR_i| \cdot c
+\end{equation}
+
+where:
+
+* $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
+* $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
+
+
+This formula facilitates distance estimation based on the cumulative Channel Impulse Response and the speed of light in nanoseconds. However, it's noteworthy that this derived feature is not utilized as part of the data mining process.
+
+
 
 \subsection{Objective}\label{objective}
 
@@ -78,7 +119,71 @@ This section encompasses various preparatory procedures aimed at optimizing the 
 
 \subsection{Feature Extraction}\label{feature_extraction}
 
+
 \subsection{Feature Derivation}\label{feature_derivation}
+
+This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis.
+
+\subsubsection{First Path Power Level}\label{first_path_power_level}
+
+The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (CIR). It is calculated using the formula:
+
+\[
+\text{First Path Power Level} = 10 \cdot \log_{10}\left(\frac{{FP\_AMP1^2 + FP\_AMP2^2 + FP\_AMP3^2}}{{RXPACC^2}}\right) - STDEV\_NOISE  % damn sick wtf jw korkor <3
+\]
+
+Where:
+\begin{itemize}
+    \item $FP\_AMP1$, $FP\_AMP2$, and $FP\_AMP3$ denote the amplitudes of the first three peaks in the CIR.
+    \item $RXPACC$ represents the receiver path accumulation length.
+    \item $STDEV\_NOISE$ represents the standard deviation of the noise, typically 64.
+\end{itemize}
+
+\subsubsection{RX Level}\label{rx_level}
+
+The RX Level quantifies the received signal strength relative to the receiver sensitivity threshold. It is computed as:
+
+\[
+\text{RX\_Level} = 
+\begin{cases} 
+0 & \text{if } \frac{{CIR\_PWR \cdot 2^{17}}}{{RXPACC^2}} = 0 \\
+10 \cdot \log_{10}\left(\frac{{CIR\_PWR \cdot 2^{17}}}{{RXPACC^2}}\right) - PRFR & \text{otherwise}
+\end{cases}
+\]
+
+\[
+\text{RX\_Level} = 
+\begin{cases} 
+\text{median}(\text{RX\_Level}) & \text{if } \text{RX\_Level} = 0 \\
+\text{RX\_Level} & \text{otherwise}
+\end{cases}
+\]
+
+Where:
+\begin{itemize}
+    \item $CIR\_PWR$ represents the power of the received Channel Impulse Response.
+    \item $PRFR$ signifies the Power Range Finder Ratio.
+\end{itemize}
+
+The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
+
+\subsubsection{Signal-to-Noise Ratio (SNR)}\label{snr}
+
+The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the received signal relative to the noise level. It is computed as:
+
+\[
+\text{SNR} = \frac{{CIR\_PWR}}{{STDEV\_NOISE}}
+\]
+
+Where:
+\begin{itemize}
+    \item $CIR\_PWR$ represents the power of the received Channel Impulse Response.
+    \item $STDEV\_NOISE$ represents the standard deviation of the noise.
+\end{itemize}
+
+The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
+
+
 
 \subsection{Feature Reduction}\label{feature_reduction}
 
@@ -99,13 +204,55 @@ In this section, various data mining techniques are employed to extract meaningf
     \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
 \end{description}
 
-
+% No Pls Im going to include other stuff here. Don't add random things here.
 \subsection{Convolution Neural Network (CNN)}\label{cnn} 
-One approach is the implementation of Convolutional Neural Network (CNN) model using TensorFlow and Keras in Python. 
 
-\subsection{Multilayer Perceptron (MLP)}\label{mlp}
-Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for this project was driven by its ability to effectively manage intricate nonlinear relationships within the dataset. MLPs, characterized by multiple layers of nodes where each layer is fully connected to the next, excel at discerning complex patterns in data and making predictions based on acquired relationships.
-Another significant factor in choosing an MLP was its versatility in handling different types of data. MLPs can process both numerical and categorical data efficiently, making them suitable for datasets with a mix of signal strength, distance, and other categorical features. Additionally, MLPs offer scalability, allowing for the adjustment of the number of neurons and layers to accommodate varying levels of dataset complexity.
+Model Creation: A Sequential model is created using Keras. This model is composed of the following layers: 
+Conv1D layers: These are convolutional layers that will convolve the input data with a set of learnable filters, each producing one feature map in the output. The kernel size is set to 3, and the activation function used is ReLU (Rectified Linear Unit).  
+MaxPooling1D layers: These layers are used to down-sample the input along its spatial dimensions (height and width). The pool size is set to 2.  
+Dense layers: These are fully connected layers. The first Dense layer has 64 units and uses the ReLU activation function. The second Dense layer has a number of units equal to the number of classes and uses the softmax activation function to output a probability distribution over the classes.  
+Model Compilation: The model is compiled with the Adam optimizer, categorical cross-entropy loss function, and accuracy as the evaluation metric.  
+Model Training: The model is trained on the training data for 10 epochs with a batch size of 32. The validation data is set to the testing set.  
+Model Evaluation: The model's performance is evaluated on the testing set and the accuracy is printed.  
+
+The mathematical concept behind the Convolutional layer (Conv1D) is the convolution operation, which is a mathematical operation on two functions that produces a third function. In the context of a CNN, the two functions are the input data and the kernel or filter. The convolution operation involves sliding the kernel across the input data and computing the dot product at each position.
+
+The mathematical formula for the convolution operation is:  $$ (f * g)(t) = \int_{-\infty}^{\infty} f(\tau)g(t - \tau) d\tau $$  Where:  
+$f$ and $g$ are the input data and kernel respectively
+$t$ is the position of the kernel
+$\tau$ is a dummy integration variable
+In the context of a CNN, the integral is replaced by a sum over the discrete spatial dimensions (height and width) of the input data and kernel.
+
+% Some definitions can remove, put here first %
+\subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                                         
+Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for NLOS/LOS classification in this project hinges on its strengths in handling complex, non-linear relationships within the dataset. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
+
+Beyond their prowess in handling non-linearity, MLPs offer a compelling advantage in terms of data versatility. They excel at processing a wide range of data types, including both numerical and categorical features. This characteristic makes them well-suited for NLOS/LOS classification tasks, where datasets often incorporate a mix of these data types. Furthermore, MLPs are inherently scalable. By adjusting the number of neurons and layers within the network, we can tailor the model's complexity to effectively capture the intricacies of the specific dataset at hand. This level of control allows us to optimize the model for the specific classification problem.
+
+The training logs reveal the model's progression over 20 epochs. The initial accuracy of around 51.91\% in the first epoch steadily improves, reaching approximately 84.53\% by the final epoch. Similarly, the validation accuracy starts at 59.64\% and climbs to 83.93\%, indicating that the model generalizes well to unseen data. 
+
+% Some figures from training %
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{Mlp_training_and_accuracy_plot}
+	\caption{MLP training and test accuracy plot}\label{fig:frequency_graph}
+\end{figure}
+
+A thorough analysis of the results reveals that the model maintains an accuracy of around 85\% throughout the epochs, indicating strong performance on the training data. In contrast, the test accuracy, though slightly lower than the training accuracy, remains stable around 80\% across epochs, suggesting reasonable generalization to unseen data. The observed gap between the training and test accuracy indicates potential overfitting, a common phenomenon where a model performs well on training data but struggles with unseen data.
+
+% TODO(ben) include why overfitting occured %
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{Mlp_training_and_validation_loss_plot}
+	\caption{MLP training and validation loss plot}\label{fig:frequency_graph}
+\end{figure}
+
+
+
+% Overall performance of mlp %
+The model's performance on the test set further validates its effectiveness. With a test accuracy of 83.93\%, the MLP demonstrates its ability to make accurate predictions on new, unseen data. The precision, recall, and F1-score for both NLOS and LOS classes are also commendable, indicating a balanced performance across the classes.
+
 
 \subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
 
@@ -113,6 +260,8 @@ Another significant factor in choosing an MLP was its versatility in handling di
 
 \subsection{Unsupervised Machine Learning Algorithms}\label{uml}
 
+
+% Plot the various performance indicators to illustrate the team choice and various result in data preprocessing & mining
 \section{Data Visualization}\label{data_visualisation}
 
 This section encompasses the graphical representation of data features and model architectures for enhanced comprehension.
@@ -124,6 +273,23 @@ This section encompasses the graphical representation of data features and model
 \end{description}
 
 \subsection{Feature Visualization}\label{feature_visualization}
+
+\subsubsection{Signal to Noise Raio}\label{snr}
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{LOS_Frequency_Graph.png}
+	\includegraphics[width=0.50\textwidth]{NLOS_Frequency_Graph.png}
+	\caption{Frequency Graph of LOS and NLOS}\label{fig:frequency_graph}
+\end{figure}
+
+\subsubsection{Signal to Noise Raio}\label{snr}
+
+\begin{figure}[H] % [H] forces the figure to be placed exactly where it appears in the text
+	\centering % Horizontally center the figure
+	\includegraphics[width=0.65\textwidth]{SNR} % Include the figure
+	\caption{Signal to Noise Ratio}\label{fig:snr}
+\end{figure}
 
 
 \subsection{Convolution Neural Network}\label{cnn_visual}
