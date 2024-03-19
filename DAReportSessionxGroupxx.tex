@@ -25,7 +25,7 @@
 ]{CSUniSchoolLabReport}
 
 
-\addbibresource{./references.bib} % Bibliography file (located in the same folder as the template)
+\addbibresource{reference.bib} % Bibliography file (located in the same folder as the template)
 
 \usepackage{enumitem}
 \usepackage{hyperref}
@@ -73,18 +73,21 @@ The academic and industrial sectors have explored numerous methodologies to miti
 \subsection{Challenges and Limitations}\label{Challenges and Limitations}
 Although ML has emerged as a promising solution for NLOS identification, existing feature-based approaches face challenges, particularly with imbalanced datasets where NLOS samples are scarce. This affects the robustness of the classifiers being trained.
 
+% Read the objective properly. intention is to apply 3d not to create a model 
 \section{Introduction to the Project}\label{Introduction to the Project}
 Against this backdrop, our project aims to address the critical challenge of distinguishing between LOS and NLOS conditions in UWB-based IPS. We intend to train a machine learning model using the given dataset, with the ultimate goal of enhancing UWB localization accuracy irrespective of LOS or NLOS conditions. Acknowledging the limitations of traditional ML approaches in handling imbalanced data, we will explore a three-dimensional-process-centric approach over sheer accuracy metrics. This strategy focuses on developing a robust classifier that remains effective even with limited NLOS data, a common scenario in real-world applications.
 
 
+% og intro, if above ok can combine / remove %
 \section{Introduction}\label{introduction}
 In the realm of signal processing and analytics, a diverse array of operations is available for data preprocessing, model training (data mining), and visualization. Notably, signal data acquired from Ultra-Wideband (UWB) Internet of Things (IoT) sensors often exhibits inherent inaccuracies and susceptibility to noise and interference.
 
-\cite{Jiang2020AnUC} introduced a novel methodology for data preprocessing and denoising in their seminal work. Moreover, they advocated for the utilization of sophisticated unsupervised machine learning algorithms, including Support Vector Machines (SVM), Convolutional Neural Networks (CNN), and Multilayer Perceptrons (MLP), for modeling the intricate dynamics of the acquired data.
+\cite{jiang_uwb_2020} introduced a novel methodology for data preprocessing and denoising in their seminal work. Moreover, they advocated for the utilization of sophisticated unsupervised machine learning algorithms, including Support Vector Machines (SVM), Convolutional Neural Networks (CNN), and Multilayer Perceptrons (MLP), for modeling the intricate dynamics of the acquired data.
 
 Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
 
-An approach to calculate distance, as introduced by \cite{9870651}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+An approach to calculate distance, as introduced by \cite{che_feature-based_2021}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+
 
 \begin{equation}
 \text{Total Distance} = \sum_{i=1}^{n} |CIR_i| \cdot c
@@ -207,6 +210,8 @@ In this section, various data mining techniques are employed to extract meaningf
 % No Pls Im going to include other stuff here. Don't add random things here.
 \subsection{Convolution Neural Network (CNN)}\label{cnn} 
 
+% BU YAO DONG %
+
 Model Creation: A Sequential model is created using Keras. This model is composed of the following layers: 
 Conv1D layers: These are convolutional layers that will convolve the input data with a set of learnable filters, each producing one feature map in the output. The kernel size is set to 3, and the activation function used is ReLU (Rectified Linear Unit).  
 MaxPooling1D layers: These layers are used to down-sample the input along its spatial dimensions (height and width). The pool size is set to 2.  
@@ -222,6 +227,7 @@ $f$ and $g$ are the input data and kernel respectively
 $t$ is the position of the kernel
 $\tau$ is a dummy integration variable
 In the context of a CNN, the integral is replaced by a sum over the discrete spatial dimensions (height and width) of the input data and kernel.
+
 
 % Some definitions can remove, put here first %
 \subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                                         
@@ -240,15 +246,13 @@ The training logs reveal the model's progression over 20 epochs. The initial acc
 
 A thorough analysis of the results reveals that the model maintains an accuracy of around 85\% throughout the epochs, indicating strong performance on the training data. In contrast, the test accuracy, though slightly lower than the training accuracy, remains stable around 80\% across epochs, suggesting reasonable generalization to unseen data. The observed gap between the training and test accuracy indicates potential overfitting, a common phenomenon where a model performs well on training data but struggles with unseen data.
 
-% TODO(ben) include why overfitting occured %
-
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{Mlp_training_and_validation_loss_plot}
 	\caption{MLP training and validation loss plot}\label{fig:frequency_graph}
 \end{figure}
 
-
+Additionally, the training and validation loss over time plot for this model shows a promising trend. It suggests that the model is learning effectively and avoiding overfitting. The training loss appears to be steadily decreasing over the epochs, indicating that the model is continually improving its ability to fit the training data. Similarly, the validation loss also shows a decreasing trend, although it fluctuates slightly more than the training loss. Overall, the validation loss follows a similar pattern to the training loss, indicating that the model is generalizing well and not overfitting to the training data.
 
 % Overall performance of mlp %
 The model's performance on the test set further validates its effectiveness. With a test accuracy of 83.93\%, the MLP demonstrates its ability to make accurate predictions on new, unseen data. The precision, recall, and F1-score for both NLOS and LOS classes are also commendable, indicating a balanced performance across the classes.
@@ -256,9 +260,21 @@ The model's performance on the test set further validates its effectiveness. Wit
 
 \subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
 
+% Decide whether are you using supervised or unsupervised learning? What algorithm should be preferred for your team? %
+% Decide the split ratio of the training/test dataset such as 70:30 or 80:20? %
+% Determine the classification, regression performance accuracy such as RMSE, confusion matrix etc? %
 \subsection{Supervised Machine Learning Algorithms}\label{sml}
 
+% TO WRITE %
+
+
+% Decide whether are you using supervised or unsupervised learning? What algorithm should be preferred for your team? %
+% Decide the split ratio of the training/test dataset such as 70:30 or 80:20? %
+% Determine the classification, regression performance accuracy such as RMSE, confusion matrix etc? %
 \subsection{Unsupervised Machine Learning Algorithms}\label{uml}
+
+
+% TO WRITE %
 
 
 % Plot the various performance indicators to illustrate the team choice and various result in data preprocessing & mining
