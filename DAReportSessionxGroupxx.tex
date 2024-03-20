@@ -20,7 +20,7 @@
 %----------------------------------------------------------------------------------------
 
 \documentclass[
-	a4paper, % Paper size, specify a4paper (A4) or letterpaper (US letter)
+	article, % Paper size, specify a4paper (A4) or letterpaper (US letter)
 	11pt, % Default font size, specify 10pt, 11pt or 12pt
 ]{CSUniSchoolLabReport}
 
@@ -73,7 +73,6 @@ The academic and industrial sectors have explored numerous methodologies to miti
 \subsection{Challenges and Limitations}\label{Challenges and Limitations}
 Although ML has emerged as a promising solution for NLOS identification, existing feature-based approaches face challenges, particularly with imbalanced datasets where NLOS samples are scarce. This affects the robustness of the classifiers being trained.
 
-% Read the objective properly. intention is to apply 3d not to create a model 
 \section{Introduction to the Project}\label{Introduction to the Project}
 Against this backdrop, our project aims to address the critical challenge of distinguishing between LOS and NLOS conditions in UWB-based IPS. We intend to train a machine learning model using the given dataset, with the ultimate goal of enhancing UWB localization accuracy irrespective of LOS or NLOS conditions. Acknowledging the limitations of traditional ML approaches in handling imbalanced data, we will explore a three-dimensional-process-centric approach over sheer accuracy metrics. This strategy focuses on developing a robust classifier that remains effective even with limited NLOS data, a common scenario in real-world applications.
 
@@ -86,7 +85,7 @@ In the realm of signal processing and analytics, a diverse array of operations i
 
 Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
 
-An approach to calculate distance, as introduced by \cite{che_feature-based_2021}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+% An approach to calculate distance, as introduced by \cite{che_feature-based_2022}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
 
 
 \begin{equation}
@@ -97,7 +96,6 @@ where:
 
 * $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
 * $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
-
 
 This formula facilitates distance estimation based on the cumulative Channel Impulse Response and the speed of light in nanoseconds. However, it's noteworthy that this derived feature is not utilized as part of the data mining process.
 
@@ -112,13 +110,13 @@ The primary aim of this assignment is to develop a model capable of discerning w
 
 This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis.
 
-\begin{description}[style=nextline]
-    \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
-    \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
-    \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
-    \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
-    \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
-\end{description}
+% \begin{description}[style=nextline]
+%     \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
+%     \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
+%     \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
+%     \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
+%     \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
+% \end{description}
 
 \subsection{Feature Extraction}\label{feature_extraction}
 
@@ -129,44 +127,34 @@ This section delineates the derivation of essential features from the Decawave U
 
 \subsubsection{First Path Power Level}\label{first_path_power_level}
 
-The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (CIR). It is calculated using the formula:
+The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (CIR). It is calculated using the following equation:
 
-\[
-\text{First Path Power Level} = 10 \cdot \log_{10}\left(\frac{{FP\_AMP1^2 + FP\_AMP2^2 + FP\_AMP3^2}}{{RXPACC^2}}\right) - STDEV\_NOISE  % damn sick wtf jw korkor <3
-\]
+\begin{equation}
+  \text{FPPL} = 10 \cdot \log_{10} \left( \frac{A_1^2 + A_2^2 + A_3^2}{P_{acc}} \right) - \sigma_n
+\end{equation}
 
-Where:
-\begin{itemize}
-    \item $FP\_AMP1$, $FP\_AMP2$, and $FP\_AMP3$ denote the amplitudes of the first three peaks in the CIR.
-    \item $RXPACC$ represents the receiver path accumulation length.
-    \item $STDEV\_NOISE$ represents the standard deviation of the noise, typically 64.
-\end{itemize}
+where:
+
+* $A_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the CIR ($i = 1, 2, 3$)
+* $P_{acc}$ (Current variable name: $RXPACC$): Receiver path accumulation length
+* $\sigma_n$ (Current variable name: $STDEV\_NOISE$): Standard deviation of the noise (typically 64)
 
 \subsubsection{RX Level}\label{rx_level}
 
 The RX Level quantifies the received signal strength relative to the receiver sensitivity threshold. It is computed as:
 
-\[
-\text{RX\_Level} = 
-\begin{cases} 
-0 & \text{if } \frac{{CIR\_PWR \cdot 2^{17}}}{{RXPACC^2}} = 0 \\
-10 \cdot \log_{10}\left(\frac{{CIR\_PWR \cdot 2^{17}}}{{RXPACC^2}}\right) - PRFR & \text{otherwise}
-\end{cases}
-\]
+\begin{equation}
+  \text{RX\_Level} =
+  \begin{cases}
+    0 & \text{if } \frac{P_{cir} \cdot 2^{17}}{P_{acc}} = 0 \\
+    10 \cdot \log_{10} \left( \frac{P_{cir} \cdot 2^{17}}{P_{acc}} \right) - PRFR & \text{otherwise}
+  \end{cases}
+\end{equation}
 
-\[
-\text{RX\_Level} = 
-\begin{cases} 
-\text{median}(\text{RX\_Level}) & \text{if } \text{RX\_Level} = 0 \\
-\text{RX\_Level} & \text{otherwise}
-\end{cases}
-\]
+where:
 
-Where:
-\begin{itemize}
-    \item $CIR\_PWR$ represents the power of the received Channel Impulse Response.
-    \item $PRFR$ signifies the Power Range Finder Ratio.
-\end{itemize}
+* $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+* $PRFR$ (Current variable name unchanged): Power Range Finder Ratio
 
 The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
 
@@ -174,19 +162,16 @@ The median operation is employed to handle instances where the initial expressio
 
 The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the received signal relative to the noise level. It is computed as:
 
-\[
-\text{SNR} = \frac{{CIR\_PWR}}{{STDEV\_NOISE}}
-\]
+\begin{equation}
+  \text{SNR} = \frac{P_{cir}}{\sigma_n}
+\end{equation}
 
-Where:
-\begin{itemize}
-    \item $CIR\_PWR$ represents the power of the received Channel Impulse Response.
-    \item $STDEV\_NOISE$ represents the standard deviation of the noise.
-\end{itemize}
+where:
+
+* $P_{cir}$ (Current variable name unchanged): Power of the received Channel Impulse Response
+* $\sigma_n$ (Current variable name unchanged): Standard deviation of the noise
 
 The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
-
-
 
 \subsection{Feature Reduction}\label{feature_reduction}
 
@@ -199,18 +184,15 @@ The SNR provides valuable insight into the reliability of the received signal am
 
 In this section, various data mining techniques are employed to extract meaningful insights from the preprocessed data.
 
-\begin{description}[style=nextline]
-    \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
-    \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
-    \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
-    \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
-    \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
-\end{description}
+% \begin{description}[style=nextline]
+%     \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
+%     \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
+%     \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
+%     \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
+%     \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
+% \end{description}
 
-% No Pls Im going to include other stuff here. Don't add random things here.
 \subsection{Convolution Neural Network (CNN)}\label{cnn} 
-
-% BU YAO DONG %
 
 Model Creation: A Sequential model is created using Keras. This model is composed of the following layers: 
 Conv1D layers: These are convolutional layers that will convolve the input data with a set of learnable filters, each producing one feature map in the output. The kernel size is set to 3, and the activation function used is ReLU (Rectified Linear Unit).  
@@ -229,7 +211,7 @@ $\tau$ is a dummy integration variable
 In the context of a CNN, the integral is replaced by a sum over the discrete spatial dimensions (height and width) of the input data and kernel.
 
 
-% Some definitions can remove, put here first %
+% todo(ben): add info about how model is being trained %
 \subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                                         
 Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for NLOS/LOS classification in this project hinges on its strengths in handling complex, non-linear relationships within the dataset. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
 
@@ -254,8 +236,14 @@ A thorough analysis of the results reveals that the model maintains an accuracy 
 
 Additionally, the training and validation loss over time plot for this model shows a promising trend. It suggests that the model is learning effectively and avoiding overfitting. The training loss appears to be steadily decreasing over the epochs, indicating that the model is continually improving its ability to fit the training data. Similarly, the validation loss also shows a decreasing trend, although it fluctuates slightly more than the training loss. Overall, the validation loss follows a similar pattern to the training loss, indicating that the model is generalizing well and not overfitting to the training data.
 
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{Mlp_classification_report}
+	\caption{Mlp training classification report}\label{fig:frequency_graph}
+\end{figure}
+
 % Overall performance of mlp %
-The model's performance on the test set further validates its effectiveness. With a test accuracy of 83.93\%, the MLP demonstrates its ability to make accurate predictions on new, unseen data. The precision, recall, and F1-score for both NLOS and LOS classes are also commendable, indicating a balanced performance across the classes.
+The MLP model demonstrates strong performance on the test dataset, achieving an accuracy of 83.9\%. This accuracy reflects the model's ability to make correct predictions on unseen data. The precision, recall, and F1-score metrics provide a detailed assessment of the model's performance for each class. For class 0, the precision is 0.80, indicating that 80\% of the samples predicted as class 0 were correct, while the recall is 0.91, indicating that 91\% of the actual class 0 samples were identified correctly. Similarly, for class 1, the precision is 0.89 and the recall is 0.77. These metrics suggest that the model performs slightly better in identifying class 1 compared to class 0. The F1-scores for both classes are around 0.84, indicating a good balance between precision and recall. The classification report also includes macro and weighted average values, which provide a summarized view of the model's performance across both classes. The macro average values are 0.84 for all metrics, while the weighted average values are slightly higher at 0.85, reflecting a slight bias towards the slightly larger class (class 1). Overall, the classification report suggests that the MLP model generalizes well to unseen data and avoids overfitting, making it effective for the NLOS/LOS classification task.
 
 
 \subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
@@ -282,11 +270,11 @@ The model's performance on the test set further validates its effectiveness. Wit
 
 This section encompasses the graphical representation of data features and model architectures for enhanced comprehension.
 
-\begin{description}[style=nextline]
-    \item[Feature Visualization:] Visual depiction of both given and derived features for enhanced understanding.
-    \item[Convolution Neural Network:] Visual representation of CNN model architecture to facilitate interpretation.
-    \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
-\end{description}
+% \begin{description}[style=nextline]
+%     \item[Feature Visualization:] Visual depiction of both given and derived features for enhanced understanding.
+%     \item[Convolution Neural Network:] Visual representation of CNN model architecture to facilitate interpretation.
+%     \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
+% \end{description}
 
 \subsection{Feature Visualization}\label{feature_visualization}
 
