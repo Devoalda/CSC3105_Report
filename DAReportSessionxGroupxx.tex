@@ -22,6 +22,7 @@
 \documentclass[
 	article, % Paper size, specify a4paper (A4) or letterpaper (US letter)
 	11pt, % Default font size, specify 10pt, 11pt or 12pt
+	draft, % Comment out before submission
 ]{CSUniSchoolLabReport}
 
 
@@ -132,7 +133,7 @@ This section delineates the derivation of essential features from the Decawave U
 The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (CIR). It is calculated using the following equation:
 
 \begin{equation}
-  \text{FPPL} = 10 \cdot \log_{10} \left( \frac{A_1^2 + A_2^2 + A_3^2}{P_{acc}} \right) - \sigma_n
+  \text{FPPL} = 10 \cdot \log_{10} \left( \frac{A_1^2 + A_2^2 + A_3^2}{P_{acc}^2} \right) - \sigma_n
 \end{equation}
 
 where:
@@ -159,7 +160,7 @@ where:
 
 \begin{itemize}
   \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
-  \item $PRFR$ (Current variable name unchanged): Power Range Finder Ratio
+  \item $PRFR$ (Current variable name unchanged): Pulse Repetition Frequency Rate in MHz
 \end{itemize}
 
 The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
@@ -175,17 +176,18 @@ The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the 
 where:
 
 \begin{itemize}
-  \item $P_{cir}$ (Current variable name unchanged): Power of the received Channel Impulse Response
-  \item $\sigma_n$ (Current variable name unchanged): Standard deviation of the noise
+  \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $\sigma_n$ (Current variable name $STDEV\_NOISE$): Standard deviation of the noise
 \end{itemize}
 
 The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
 
 \subsection{Feature Reduction}\label{feature_reduction}
 
+% Double check ALL formula, maybe cite or something idk
 \subsection{De-Noise Functions}\label{de_noise_Functions}
 
-In the paper by [1], the authors proposed a novel denoising approach for UWB signals. They employed the Lucy-Richardson algorithm, a well-known deconvolution algorithm, to remove noise and enhance the quality of the received signal. The algorithm operates by iteratively estimating the original signal from the observed signal and the point spread function (PSF), which characterizes the blurring effect on the signal due to noise and other factors. The authors demonstrated the effectiveness of the Lucy-Richardson algorithm in denoising UWB signals and improving the accuracy of localization systems. The algorithm was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+In the paper by \cite{jiang_uwb_2020}, the authors proposed a novel denoising approach for UWB signals. They employed the Lucy-Richardson algorithm, a well-known deconvolution algorithm, to remove noise and enhance the quality of the received signal. The algorithm operates by iteratively estimating the original signal from the observed signal and the point spread function (PSF), which characterizes the blurring effect on the signal due to noise and other factors. The authors demonstrated the effectiveness of the Lucy-Richardson algorithm in denoising UWB signals and improving the accuracy of localization systems. The algorithm was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
 
 However, they also suggested that the Wavelet Transformation approach is used more commonly in practice due to its simplicity and effectiveness. The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for the removal of noise and the extraction of important features from the signal. The authors demonstrated the effectiveness of the Wavelet Transformation approach in denoising UWB signals and improving the accuracy of localization systems. The approach was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
 
@@ -234,24 +236,48 @@ This approach is used to denoise the UWB CIR signals and enhance the quality of 
 
 A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_wavelet}.
 
-\subsection{Lucy-Richardson Algorithm}\label{lucy_richardson_algorithm}
+\subsubsection{Lucy-Richardson Algorithm}
 
-The Lucy-Richardson algorithm is a well-known deconvolution algorithm that is used to remove noise and enhance the quality of the received signal. It operates by iteratively estimating the original signal $x(n)$ from the observed signal $y(n)$ and the point spread function (PSF) $h(n)$, which characterizes the blurring effect on the signal due to noise and other factors. The algorithm is particularly well-suited for denoising UWB signals, as it can effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
-
-\textbf{Equation for Lucy-Richardson Algorithm:}
+Given observed signal $I$ (cir\_values) and point spread function (PSF) $h$ (psf), the Richardson-Lucy algorithm aims to estimate the original signal $J$ through iterative refinement. The algorithm iteratively updates the estimate $J^{(k)}$ according to the following formula:
 
 \begin{equation}
-  x_{i+1}(n) = \frac{x_i(n)}{ \sum_{m} x_i(m) * h(n-m) } * \sum_{m} y(m) * h(n-m)
+J^{(k+1)} = J^{(k)} \otimes \left( \frac{I}{(J^{(k)} \otimes h)} \right) \otimes h^T
 \end{equation}
 
 Where:
 \begin{itemize}
-  \item $x_{i+1}(n)$: Estimated signal at iteration $i+1$
-  \item $x_i(n)$: Estimated signal at iteration $i$
-  \item $y(n)$: Observed noisy signal
-  \item $h(n)$: Point spread function (PSF)
-
+    \item $J^{(k)}$ is the estimate of the original signal at iteration $k$.
+    \item $\otimes$ denotes the convolution operation.
+    \item $h^T$ represents the transpose of the PSF. 
 \end{itemize}
+
+
+The algorithm terminates after a specified number of iterations or upon reaching convergence criteria.
+
+In the context of Python programming, this algorithm can be implemented using the following function:
+
+\begin{verbatim}
+def deconvolve_cir(cir_values, psf=None, iterations=50):
+    # If no point spread function is provided, create a simple one
+    if psf is None:
+        psf = np.ones((5,)) / 5
+
+    # Perform Richardson-Lucy deconvolution
+    deconvolved_cir = restoration.richardson_lucy(
+        cir_values, 
+        psf, 
+        num_iter=iterations
+    )
+
+    return deconvolved_cir
+\end{verbatim}
+
+This function takes circular (shifted) impulse response (CIR) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved CIR.
+
+
+
+A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_lr}. Notice that figure \ref{fig:frequency_graph_lr} shows a almost straight line across the graph, this might be due to the incorrect use of the function. Figure \ref{fig:frequency_graph_lr_scaled} shows a cleared, scaled image. This was not used in the Data mining phase due to its low variance as visualised in both figures.
+
 
 
 % Probably should just put diagrams and charts in data Visualization instead of here
@@ -272,24 +298,28 @@ In this section, various data mining techniques are employed to extract meaningf
 
 Convolutional Neural Networks (CNNs) are a powerful class of deep learning models that have achieved remarkable success in various image recognition and signal processing tasks. Their ability to automatically learn spatial features from the input data makes them particularly well-suited for analyzing sequential data like UWB CIR signals. In this work, a CNN is employed to classify the received UWB signals based on the location information they contain.
 
-\subsubsection{Model Creation}
+\subsubsection{Model Architecture}
 
-The CNN model is constructed using a sequential API provided by Keras. The model architecture consists of the following layers:
+The CNN model architecture comprises Conv1D, BatchNormalization, Dropout, Flatten, and Dense layers:
 
 \begin{itemize}
-  \item \textbf{Conv1D Layers:} These layers represent the core building blocks of the CNN. They perform a convolution operation between the input data and a set of learnable filters, generating feature maps that capture specific features within the signal. The kernel size for these layers is set to 3, allowing the filters to learn patterns spanning three consecutive data points. The ReLU (Rectified Linear Unit) activation function is applied after each convolution to introduce non-linearity and improve model performance.
-
-\item \textbf{MaxPooling1D Layers:} These layers are used for downsampling the feature maps obtained from the convolutional layers. This reduces the dimensionality of the data while preserving the most important features. The pool size for these layers is set to 2, meaning each output element is computed by taking the maximum value from a window of size 2 in the corresponding input feature map.
-
-\item \textbf{Dense Layers:} These layers function as fully-connected layers, where each neuron in the layer is connected to all neurons in the previous layer. The first Dense layer has 64 units and utilizes the ReLU activation function for introducing non-linearity. The final Dense layer has a number of units equal to the number of target classes (representing different locations). This layer employs the softmax activation function to output a probability distribution over the classes, indicating the model's confidence in each class for a given input signal.
+    \item \textbf{Conv1D Layers:} Two Conv1D layers with 64 and 32 filters respectively, kernel size of 3, ReLU activation, and L2 regularization for preventing overfitting.
+    \item \textbf{BatchNormalization Layers:} Normalize activations to accelerate training and reduce overfitting.
+    \item \textbf{Dropout Layers:} Implemented with a rate of 0.5 to prevent overfitting by randomly dropping input units.
+    \item \textbf{Flatten Layer:} Flattens the input for transitioning between convolutional and dense layers.
+    \item \textbf{Dense Layers:} Two dense layers with 64 units and softmax activation for multi-class classification.
 \end{itemize}
 
 \subsubsection{Model Compilation and Training}
 
-% To be modified after Code Cleanup %
-The constructed CNN model is compiled using the Adam optimizer, which is an efficient optimization algorithm for training deep learning models. The categorical cross-entropy loss function is chosen as the loss function, as it is commonly used for multi-class classification problems. The loss function measures the difference between the predicted class probabilities and the true class labels. Finally, accuracy is selected as the primary evaluation metric to assess the model's performance during training and testing.
+\begin{itemize}
+    \item \textbf{Optimizer:} Adam optimizer with a learning rate of 0.0001.
+    \item \textbf{Loss Function:} Categorical cross-entropy for multi-class classification.
+    \item \textbf{Metrics:} Accuracy is chosen as the evaluation metric.
+    \item \textbf{Early Stopping:} Training halts if validation loss doesn't improve for 10 consecutive epochs.
+    \item \textbf{Training Parameters:} Trained for 20 epochs with a batch size of 32.
+\end{itemize}
 
-The model is then trained on the prepared training dataset for a defined number of epochs (iterations over the entire dataset). In this case, the model is trained for 10 epochs with a batch size of 32. The batch size determines the number of samples processed before updating the model weights during training. A larger batch size can potentially lead to faster training but might also result in lower accuracy. The validation data is used to monitor the model's performance during training and prevent overfitting. Overfitting occurs when the model memorizes the training data too well and performs poorly on unseen data.
 
 \subsubsection{Convolution Operation}
 
@@ -322,14 +352,30 @@ One might consider explicitly extracting features from the UWB CIR signals befor
 
 
 % todo(ben): add info about how model is being trained %
-\subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                                         
-Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for NLOS/LOS classification in this project hinges on its strengths in handling complex, non-linear relationships within the dataset. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
+\subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                 
+The Multilayer Perceptron (MLP) model is a class of feedforward artificial neural network that consists of at least three layers of nodes: an input layer, a hidden layer, and an output layer. MLPs are known for their ability to handle complex, non-linear relationships within the dataset, making them suitable for a wide range of classification tasks. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
 
-Beyond their prowess in handling non-linearity, MLPs offer a compelling advantage in terms of data versatility. They excel at processing a wide range of data types, including both numerical and categorical features. This characteristic makes them well-suited for NLOS/LOS classification tasks, where datasets often incorporate a mix of these data types. Furthermore, MLPs are inherently scalable. By adjusting the number of neurons and layers within the network, we can tailor the model's complexity to effectively capture the intricacies of the specific dataset at hand. This level of control allows us to optimize the model for the specific classification problem.
+\subsubsection{Model Creation}
 
-The training logs reveal the model's progression over 20 epochs. The initial accuracy of around 51.91\% in the first epoch steadily improves, reaching approximately 84.53\% by the final epoch. Similarly, the validation accuracy starts at 59.64\% and climbs to 83.93\%, indicating that the model generalizes well to unseen data. 
+The MLP model used in this project was constructed using TensorFlow and Keras. The model architecture includes several Dense layers, BatchNormalization layers, and Dropout layers:
 
-% Some figures from training %
+\begin{itemize}
+    \item \textbf{Network Layers:} The model utilizes a sequential stack of Dense layers with ReLU activation for non-linearity. The first layer has 64 units, followed by layers with 32 and 16 units respectively. The final layer has a single unit with a sigmoid activation function suitable for binary classification (NLOS vs. LOS).
+    \item \textbf{Regularization Techniques:} L2 regularization with a weight decay of 0.001 is applied to each Dense layer to penalize large weights and encourage smoother decision boundaries, reducing overfitting.
+    \item \textbf{Normalization and Dropout:} BatchNormalization layers are inserted after each Dense layer to improve training speed and stability by normalizing activations. Dropout layers with a rate of 0.5 are strategically placed after BatchNormalization to randomly drop a fraction of activations during training, further preventing overfitting by encouraging the model to learn robust features that are not dependent on specific input units.
+\end{itemize}
+
+\subsubsection{Model Compilation and Training}
+
+\begin{itemize}
+    \item \textbf{Data Preparation:} Prior to training, data undergoes feature scaling using a StandardScaler object to ensure all features have a zero mean and unit variance. This improves the convergence of the optimization algorithm.
+    \item \textbf{Train-Test Split:} The data is split into training and testing sets with an 80:20 ratio, ensuring a representative sample for model evaluation.
+    \item \textbf{Early Stopping:} An EarlyStopping callback monitors the validation loss during training. Training is halted if the validation loss fails to improve for 10 consecutive epochs, preventing overfitting.
+    \item \textbf{Model Compilation:} The model is compiled using the Adam optimizer with a learning rate of 0.0001 and binary cross-entropy loss function, suitable for binary classification tasks. Accuracy is chosen as the primary evaluation metric.
+    \item \textbf{Training Process:} The model is trained for 20 epochs with a batch size of 32. The training history is captured to visualize the learning process later.
+\end{itemize}
+
+% % Some figures from training %
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{Mlp_training_and_accuracy_plot}
@@ -352,8 +398,39 @@ Additionally, the training and validation loss over time plot for this model sho
 	\caption{Mlp training classification report}\label{fig:mlp_classification_report}
 \end{figure}
 
-% Overall performance of mlp %
-The MLP model demonstrates strong performance on the test dataset, achieving an accuracy of 83.9\%. This accuracy reflects the model's ability to make correct predictions on unseen data. The precision, recall, and F1-score metrics provide a detailed assessment of the model's performance for each class. For class 0, the precision is 0.80, indicating that 80\% of the samples predicted as class 0 were correct, while the recall is 0.91, indicating that 91\% of the actual class 0 samples were identified correctly. Similarly, for class 1, the precision is 0.89 and the recall is 0.77. These metrics suggest that the model performs slightly better in identifying class 1 compared to class 0. The F1-scores for both classes are around 0.84, indicating a good balance between precision and recall. The classification report also includes macro and weighted average values, which provide a summarized view of the model's performance across both classes. The macro average values are 0.84 for all metrics, while the weighted average values are slightly higher at 0.85, reflecting a slight bias towards the slightly larger class (class 1). Overall, the classification report suggests that the MLP model generalizes well to unseen data and avoids overfitting, making it effective for the NLOS/LOS classification task.
+% todo classification report Justification %
+
+\subsubsection{Multilayer Perceptron Operation}
+
+% The Multi-Layer Perceptron (MLP) is a type of feedforward artificial neural network that consists of at least three layers of nodes: an input layer, a hidden layer, and an output layer. Each node in the hidden and output layers of the MLP uses a nonlinear activation function. The core mathematical concept underlying the MLP is the dot product operation, which is used in the neurons of the Dense layers. This operation can be visualized as a neuron taking a weighted sum of its input, adding a bias, and then passing the result through an activation function. Mathematically, the output $y$ of a neuron is defined as:  \begin{equation} y = \phi \left( \sum_{i=1}^{n} w_i x_i + b \right) \end{equation}  where:  \begin{itemize} \item $w_i$ and $x_i$ are the weights and input data, respectively \item $n$ is the number of inputs to the neuron \item $b$ is the bias \item $\phi$ is the activation function \end{itemize}  In the MLP model, the ReLU function is used as the activation function in the hidden layers, and the sigmoid function is used in the output layer. The model is trained using the Adam optimization algorithm and the binary cross-entropy loss function, making it suitable for binary classification tasks.
+
+The core mathematical concept underlying the MLP is the dot product operation, which is used in the neurons of the Dense layers. This operation can be visualized as a neuron taking a weighted sum of its input, adding a bias, and then passing the result through an activation function. Mathematically, the output \(y\) of a neuron is defined as:
+
+\[
+y = \phi \left( \sum_{i=1}^{n} w_i x_i + b \right)
+\]
+
+where:
+\begin{itemize}
+  \item \(w_i\) and \(x_i\) are the weights and input data, respectively
+  \item \(n\) is the number of inputs to the neuron
+  \item \(b\) is the bias
+  \item \(\phi\) is the activation function
+\end{itemize}
+
+In the MLP model, the ReLU function is used as the activation function in the hidden layers, and the sigmoid function is used in the output layer. The model is trained using the Adam optimization algorithm and the binary cross-entropy loss function, making it suitable for binary classification tasks.
+
+% might remove this %
+\subsubsection{Justification for not Pre-reducing Features}% Prolly can use 1 common one cuz same Justification (ok)
+
+% Another approach involved training a Multilayer Perceptron (MLP) model using TensorFlow and Keras in Python. The decision to employ a Multilayer Perceptron (MLP) model for NLOS/LOS classification in this project hinges on its strengths in handling complex, non-linear relationships within the dataset. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
+
+% Beyond their prowess in handling non-linearity, MLPs offer a compelling advantage in terms of data versatility. They excel at processing a wide range of data types, including both numerical and categorical features. This characteristic makes them well-suited for NLOS/LOS classification tasks, where datasets often incorporate a mix of these data types. Furthermore, MLPs are inherently scalable. By adjusting the number of neurons and layers within the network, we can tailor the model's complexity to effectively capture the intricacies of the specific dataset at hand. This level of control allows us to optimize the model for the specific classification problem.
+
+% The training logs reveal the model's progression over 20 epochs. The initial accuracy of around 51.91\% in the first epoch steadily improves, reaching approximately 84.53\% by the final epoch. Similarly, the validation accuracy starts at 59.64\% and climbs to 83.93\%, indicating that the model generalizes well to unseen data. 
+
+% % Overall performance of mlp %
+% The MLP model demonstrates strong performance on the test dataset, achieving an accuracy of 83.9\%. This accuracy reflects the model's ability to make correct predictions on unseen data. The precision, recall, and F1-score metrics provide a detailed assessment of the model's performance for each class. For class 0, the precision is 0.80, indicating that 80\% of the samples predicted as class 0 were correct, while the recall is 0.91, indicating that 91\% of the actual class 0 samples were identified correctly. Similarly, for class 1, the precision is 0.89 and the recall is 0.77. These metrics suggest that the model performs slightly better in identifying class 1 compared to class 0. The F1-scores for both classes are around 0.84, indicating a good balance between precision and recall. The classification report also includes macro and weighted average values, which provide a summarized view of the model's performance across both classes. The macro average values are 0.84 for all metrics, while the weighted average values are slightly higher at 0.85, reflecting a slight bias towards the slightly larger class (class 1). Overall, the classification report suggests that the MLP model generalizes well to unseen data and avoids overfitting, making it effective for the NLOS/LOS classification task.
 
 
 \subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
@@ -392,8 +469,8 @@ This section encompasses the graphical representation of data features and model
 
 \begin{figure}[H] 
 	\centering
-	\includegraphics[width=0.50\textwidth]{LOS_Frequency_Graph.png}
-	\includegraphics[width=0.50\textwidth]{NLOS_Frequency_Graph.png}
+	\includegraphics[width=1\textwidth]{LOS_Frequency_Graph.png}
+	\includegraphics[width=1\textwidth]{NLOS_Frequency_Graph.png}
 	\caption{Frequency Graph of LOS and NLOS}\label{fig:frequency_graph}
 \end{figure}
 
@@ -401,16 +478,32 @@ This section encompasses the graphical representation of data features and model
 
 \begin{figure}[H] 
   \centering
-  \includegraphics[width=0.50\textwidth]{Wavelet_Denoised_LOS_Frequency_Graph.png}
-  \includegraphics[width=0.50\textwidth]{Wavelet_Denoised_NLOS_Frequency_Graph.png}
+  \includegraphics[width=1\textwidth]{Wavelet_Denoised_LOS_Frequency_Graph.png}
+  \includegraphics[width=1\textwidth]{Wavelet_Denoised_NLOS_Frequency_Graph.png}
   \caption{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{fig:frequency_graph_wavelet}
+\end{figure}
+
+\subsubsection{Frequency Graph of Lucy-Richardson Transformation LOS and NLOS}\label{frequency_graph_lr}
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth]{lr_denoise_LOS.png}
+  \includegraphics[width=1\textwidth]{lr_denoise_NLOS.png}
+  \caption{Frequency Graph of Lucy-Richardson(Unscaled) LOS and NLOS}\label{fig:frequency_graph_lr}
+\end{figure}
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth]{lr_denoise_LOS_Scaled.png}
+  \includegraphics[width=1\textwidth]{lr_denoise_NLOS_Scaled.png}
+  \caption{Frequency Graph of Lucy-Richardson(scaled) LOS and NLOS}\label{fig:frequency_graph_lr_scaled}
 \end{figure}
 
 \subsubsection{Signal to Noise Raio}\label{sur_visual}
 
 \begin{figure}[H] % [H] forces the figure to be placed exactly where it appears in the text
 	\centering % Horizontally center the figure
-	\includegraphics[width=0.65\textwidth]{SNR} % Include the figure
+	\includegraphics[width=1\textwidth]{SNR} % Include the figure
 	\caption{Signal to Noise Ratio}\label{fig:snr}
 \end{figure}
 
