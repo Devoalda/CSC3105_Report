@@ -42,7 +42,7 @@
 
 \usepackage{float} % Allows more precisely positioning floats e.g. \begin{figure}[H]
 
-\usepackage{mhchem} % Package for chemical equation typesetting
+\usepackage[version=4]{mhchem} % Package for chemical equation typesetting
 \usepackage{siunitx} % Provides the \SI{}{} and \si{} commands for typesetting technical/scientific SI units correctly
 
 \usepackage{amsmath} % Required for some math elements 

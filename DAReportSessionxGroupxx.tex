@@ -85,7 +85,7 @@ In the realm of signal processing and analytics, a diverse array of operations i
 
 Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
 
-% An approach to calculate distance, as introduced by \cite{che_feature-based_2022}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+An approach to calculate distance, as introduced by \cite{che_feature-based_2022}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
 
 
 \begin{equation}
@@ -94,8 +94,10 @@ Their pioneering approach not only addresses the challenges associated with nois
 
 where:
 
-* $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
-* $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
+\begin{itemize}
+  \item $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
+  \item $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
+\end{itemize}
 
 This formula facilitates distance estimation based on the cumulative Channel Impulse Response and the speed of light in nanoseconds. However, it's noteworthy that this derived feature is not utilized as part of the data mining process.
 
@@ -110,20 +112,20 @@ The primary aim of this assignment is to develop a model capable of discerning w
 
 This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis.
 
-% \begin{description}[style=nextline]
-%     \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
-%     \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
-%     \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
-%     \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
-%     \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
-% \end{description}
+\begin{description}[style=nextline]
+    \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
+    \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
+    \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
+    \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
+    \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
+\end{description}
 
 \subsection{Feature Extraction}\label{feature_extraction}
 
 
 \subsection{Feature Derivation}\label{feature_derivation}
 
-This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis.
+This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models.
 
 \subsubsection{First Path Power Level}\label{first_path_power_level}
 
@@ -135,9 +137,11 @@ The First Path Power Level represents the strength of the primary signal path in
 
 where:
 
-* $A_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the CIR ($i = 1, 2, 3$)
-* $P_{acc}$ (Current variable name: $RXPACC$): Receiver path accumulation length
-* $\sigma_n$ (Current variable name: $STDEV\_NOISE$): Standard deviation of the noise (typically 64)
+\begin{itemize}
+  \item $A_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the CIR ($i = 1, 2, 3$)
+  \item $P_{acc}$ (Current variable name: $RXPACC$): Receiver path accumulation length
+  \item $\sigma_n$ (Current variable name: $STDEV\_NOISE$): Standard deviation of the noise (typically 64)
+\end{itemize}
 
 \subsubsection{RX Level}\label{rx_level}
 
@@ -153,8 +157,10 @@ The RX Level quantifies the received signal strength relative to the receiver se
 
 where:
 
-* $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
-* $PRFR$ (Current variable name unchanged): Power Range Finder Ratio
+\begin{itemize}
+  \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $PRFR$ (Current variable name unchanged): Power Range Finder Ratio
+\end{itemize}
 
 The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
 
@@ -168,14 +174,84 @@ The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the 
 
 where:
 
-* $P_{cir}$ (Current variable name unchanged): Power of the received Channel Impulse Response
-* $\sigma_n$ (Current variable name unchanged): Standard deviation of the noise
+\begin{itemize}
+  \item $P_{cir}$ (Current variable name unchanged): Power of the received Channel Impulse Response
+  \item $\sigma_n$ (Current variable name unchanged): Standard deviation of the noise
+\end{itemize}
 
 The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
 
 \subsection{Feature Reduction}\label{feature_reduction}
 
 \subsection{De-Noise Functions}\label{de_noise_Functions}
+
+In the paper by [1], the authors proposed a novel denoising approach for UWB signals. They employed the Lucy-Richardson algorithm, a well-known deconvolution algorithm, to remove noise and enhance the quality of the received signal. The algorithm operates by iteratively estimating the original signal from the observed signal and the point spread function (PSF), which characterizes the blurring effect on the signal due to noise and other factors. The authors demonstrated the effectiveness of the Lucy-Richardson algorithm in denoising UWB signals and improving the accuracy of localization systems. The algorithm was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+However, they also suggested that the Wavelet Transformation approach is used more commonly in practice due to its simplicity and effectiveness. The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for the removal of noise and the extraction of important features from the signal. The authors demonstrated the effectiveness of the Wavelet Transformation approach in denoising UWB signals and improving the accuracy of localization systems. The approach was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+In this section, we will explore the implementation of the Wavelet Transformation approach to denoise the UWB signals and enhance the quality of the received signal. We will also evaluate the effectiveness of the approach in improving the accuracy of the localization system and discuss its potential advantages and limitations.
+
+\subsubsection{Wavelet Transformation}\label{wavelet_transformation}
+
+The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for removal of noise and extraction of important features from the signal. The approach has been widely used in signal processing and data analysis due to its simplicity and effectiveness. The Wavelet Transformation approach is particularly well-suited for denoising UWB signals, as it can effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+\textbf{Equation for Wavelet Transform:}
+
+The Discrete Wavelet Transform (DWT) is commonly used for signal denoising. Here, the signal $x(t)$ is decomposed into a set of wavelet coefficients $W_f(a, \tau)$ at different scales $a$ and translations $\tau$:
+
+\begin{equation}
+W_f(a, \tau) = \int_{-\infty}^{\infty} x(t) \psi_{a, \tau}(t) dt
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $W_f(a, \tau)$ represents wavelet coefficients
+  \item $x(t)$ is the original signal
+  \item $\psi_{a, \tau}(t)$ is the wavelet function (mother wavelet)
+  \item $a$ is the scale parameter (controls wavelet's width)
+  \item $\tau$ is the translation parameter (controls wavelet's position)
+\end{itemize}
+
+The denoising process involves applying a thresholding function to the wavelet coefficients, removing noise components and keeping the significant signal components. The reconstructed signal $x'(t)$ is obtained by integrating the denoised wavelet coefficients over all scales and translations:
+
+The wavelet Daubechies wavelet is used to transform the LOS and NLOS signals. The transformed signals are then denoised using the Wavelet Transformation approach, which effectively removes noise and enhances the quality of the received signal. The denoised signals are then used as input to the machine learning models for training and testing.
+
+\begin{equation}
+x'(t) = \int_{-\infty}^{\infty} \sum_{a} W_f'(a, \tau) \psi_{a, \tau}(t) \frac{da d\tau}{a^2}
+\end{equation}
+
+where 
+
+\begin{itemize}
+  \item $W_f'(a, \tau)$: Denoised wavelet coefficients
+  \item $\psi_{a, \tau}(t)$: Translated and scaled wavelet function
+  \item $a$: Scale parameter
+  \item $\tau$: Translation parameter
+\end{itemize}
+
+This approach is used to denoise the UWB CIR signals and enhance the quality of the received signal. The Wavelet Transformation approach has been shown to effectively remove noise and improve the accuracy of UWB localization systems. It is a simple and effective method for denoising UWB signals and enhancing the quality of the received signal, and it has the potential to improve the accuracy and reliability of UWB localization systems. It is used in the Data Mining phase during the model training process to improve the quality of the input data and enhance the performance of the machine learning models.
+
+A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_wavelet}.
+
+\subsection{Lucy-Richardson Algorithm}\label{lucy_richardson_algorithm}
+
+The Lucy-Richardson algorithm is a well-known deconvolution algorithm that is used to remove noise and enhance the quality of the received signal. It operates by iteratively estimating the original signal $x(n)$ from the observed signal $y(n)$ and the point spread function (PSF) $h(n)$, which characterizes the blurring effect on the signal due to noise and other factors. The algorithm is particularly well-suited for denoising UWB signals, as it can effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+\textbf{Equation for Lucy-Richardson Algorithm:}
+
+\begin{equation}
+  x_{i+1}(n) = \frac{x_i(n)}{ \sum_{m} x_i(m) * h(n-m) } * \sum_{m} y(m) * h(n-m)
+\end{equation}
+
+Where:
+\begin{itemize}
+  \item $x_{i+1}(n)$: Estimated signal at iteration $i+1$
+  \item $x_i(n)$: Estimated signal at iteration $i$
+  \item $y(n)$: Observed noisy signal
+  \item $h(n)$: Point spread function (PSF)
+
+\end{itemize}
 
 
 % Probably should just put diagrams and charts in data Visualization instead of here
@@ -184,31 +260,65 @@ The SNR provides valuable insight into the reliability of the received signal am
 
 In this section, various data mining techniques are employed to extract meaningful insights from the preprocessed data.
 
-% \begin{description}[style=nextline]
-%     \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
-%     \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
-%     \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
-%     \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
-%     \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
-% \end{description}
+\begin{description}[style=nextline]
+    \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
+    \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
+    \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
+    \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
+    \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
+\end{description}
 
-\subsection{Convolution Neural Network (CNN)}\label{cnn} 
+\subsection{Convolution Neural Network (CNN)}\label{cnn}
 
-Model Creation: A Sequential model is created using Keras. This model is composed of the following layers: 
-Conv1D layers: These are convolutional layers that will convolve the input data with a set of learnable filters, each producing one feature map in the output. The kernel size is set to 3, and the activation function used is ReLU (Rectified Linear Unit).  
-MaxPooling1D layers: These layers are used to down-sample the input along its spatial dimensions (height and width). The pool size is set to 2.  
-Dense layers: These are fully connected layers. The first Dense layer has 64 units and uses the ReLU activation function. The second Dense layer has a number of units equal to the number of classes and uses the softmax activation function to output a probability distribution over the classes.  
-Model Compilation: The model is compiled with the Adam optimizer, categorical cross-entropy loss function, and accuracy as the evaluation metric.  
-Model Training: The model is trained on the training data for 10 epochs with a batch size of 32. The validation data is set to the testing set.  
-Model Evaluation: The model's performance is evaluated on the testing set and the accuracy is printed.  
+Convolutional Neural Networks (CNNs) are a powerful class of deep learning models that have achieved remarkable success in various image recognition and signal processing tasks. Their ability to automatically learn spatial features from the input data makes them particularly well-suited for analyzing sequential data like UWB CIR signals. In this work, a CNN is employed to classify the received UWB signals based on the location information they contain.
 
-The mathematical concept behind the Convolutional layer (Conv1D) is the convolution operation, which is a mathematical operation on two functions that produces a third function. In the context of a CNN, the two functions are the input data and the kernel or filter. The convolution operation involves sliding the kernel across the input data and computing the dot product at each position.
+\subsubsection{Model Creation}
 
-The mathematical formula for the convolution operation is:  $$ (f * g)(t) = \int_{-\infty}^{\infty} f(\tau)g(t - \tau) d\tau $$  Where:  
-$f$ and $g$ are the input data and kernel respectively
-$t$ is the position of the kernel
-$\tau$ is a dummy integration variable
-In the context of a CNN, the integral is replaced by a sum over the discrete spatial dimensions (height and width) of the input data and kernel.
+The CNN model is constructed using a sequential API provided by Keras. The model architecture consists of the following layers:
+
+\begin{itemize}
+  \item \textbf{Conv1D Layers:} These layers represent the core building blocks of the CNN. They perform a convolution operation between the input data and a set of learnable filters, generating feature maps that capture specific features within the signal. The kernel size for these layers is set to 3, allowing the filters to learn patterns spanning three consecutive data points. The ReLU (Rectified Linear Unit) activation function is applied after each convolution to introduce non-linearity and improve model performance.
+
+\item \textbf{MaxPooling1D Layers:} These layers are used for downsampling the feature maps obtained from the convolutional layers. This reduces the dimensionality of the data while preserving the most important features. The pool size for these layers is set to 2, meaning each output element is computed by taking the maximum value from a window of size 2 in the corresponding input feature map.
+
+\item \textbf{Dense Layers:} These layers function as fully-connected layers, where each neuron in the layer is connected to all neurons in the previous layer. The first Dense layer has 64 units and utilizes the ReLU activation function for introducing non-linearity. The final Dense layer has a number of units equal to the number of target classes (representing different locations). This layer employs the softmax activation function to output a probability distribution over the classes, indicating the model's confidence in each class for a given input signal.
+\end{itemize}
+
+\subsubsection{Model Compilation and Training}
+
+% To be modified after Code Cleanup %
+The constructed CNN model is compiled using the Adam optimizer, which is an efficient optimization algorithm for training deep learning models. The categorical cross-entropy loss function is chosen as the loss function, as it is commonly used for multi-class classification problems. The loss function measures the difference between the predicted class probabilities and the true class labels. Finally, accuracy is selected as the primary evaluation metric to assess the model's performance during training and testing.
+
+The model is then trained on the prepared training dataset for a defined number of epochs (iterations over the entire dataset). In this case, the model is trained for 10 epochs with a batch size of 32. The batch size determines the number of samples processed before updating the model weights during training. A larger batch size can potentially lead to faster training but might also result in lower accuracy. The validation data is used to monitor the model's performance during training and prevent overfitting. Overfitting occurs when the model memorizes the training data too well and performs poorly on unseen data.
+
+\subsubsection{Convolution Operation}
+
+The core mathematical concept underlying the Conv1D layers is the convolution operation. In simpler terms, convolution can be understood through an analogy:
+
+\begin{quote}
+ Imagine a policeman investigating a crime scene. The policeman (filter) systematically scans the scene (input data) searching for evidence (features). By sliding a magnifying glass (kernel) across different areas, the policeman extracts crucial details (feature maps) that contribute to solving the crime (classification task).
+\end{quote}
+
+Mathematically, the convolution operation is defined as:
+
+\begin{equation}
+(f * g)(t) = \int_{-\infty}^{\infty} f(\tau)g(t - \tau) d\tau
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $f$ and $g$ are the input data and the kernel, respectively
+  \item $*$ denotes the convolution operation
+  \item $t$ is the position at which the convolution is computed
+  \item $\tau$ is the integration variable
+\end{itemize}
+
+In the context of CNNs, the integral is replaced by a summation over the discrete spatial dimensions (width in the case of Conv1D layers) of the input data and the kernel. The convolution operation essentially computes the dot product between the filter and the input data at each position, capturing the presence and strength of the specific feature the filter is designed to detect.
+
+\subsubsection{Justification for not Pre-reducing Features}
+
+One might consider explicitly extracting features from the UWB CIR signals before feeding them into the CNN. However, this approach has limitations. Handcrafted features might not capture the most relevant information for the classification task. In contrast, CNNs excel at automatically learning these features directly from the raw data during the training process. This allows the model to identify the most discriminative features for achieving optimal
 
 
 % todo(ben): add info about how model is being trained %
@@ -223,7 +333,7 @@ The training logs reveal the model's progression over 20 epochs. The initial acc
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{Mlp_training_and_accuracy_plot}
-	\caption{MLP training and test accuracy plot}\label{fig:frequency_graph}
+	\caption{MLP training and test accuracy plot}\label{fig:mlp_training_and_accuracy_plot}
 \end{figure}
 
 A thorough analysis of the results reveals that the model maintains an accuracy of around 85\% throughout the epochs, indicating strong performance on the training data. In contrast, the test accuracy, though slightly lower than the training accuracy, remains stable around 80\% across epochs, suggesting reasonable generalization to unseen data. The observed gap between the training and test accuracy indicates potential overfitting, a common phenomenon where a model performs well on training data but struggles with unseen data.
@@ -231,7 +341,7 @@ A thorough analysis of the results reveals that the model maintains an accuracy 
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{Mlp_training_and_validation_loss_plot}
-	\caption{MLP training and validation loss plot}\label{fig:frequency_graph}
+	\caption{MLP training and validation loss plot}\label{fig:mlp_training_and_validation_loss_plot}
 \end{figure}
 
 Additionally, the training and validation loss over time plot for this model shows a promising trend. It suggests that the model is learning effectively and avoiding overfitting. The training loss appears to be steadily decreasing over the epochs, indicating that the model is continually improving its ability to fit the training data. Similarly, the validation loss also shows a decreasing trend, although it fluctuates slightly more than the training loss. Overall, the validation loss follows a similar pattern to the training loss, indicating that the model is generalizing well and not overfitting to the training data.
@@ -239,7 +349,7 @@ Additionally, the training and validation loss over time plot for this model sho
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{Mlp_classification_report}
-	\caption{Mlp training classification report}\label{fig:frequency_graph}
+	\caption{Mlp training classification report}\label{fig:mlp_classification_report}
 \end{figure}
 
 % Overall performance of mlp %
@@ -270,15 +380,15 @@ The MLP model demonstrates strong performance on the test dataset, achieving an 
 
 This section encompasses the graphical representation of data features and model architectures for enhanced comprehension.
 
-% \begin{description}[style=nextline]
-%     \item[Feature Visualization:] Visual depiction of both given and derived features for enhanced understanding.
-%     \item[Convolution Neural Network:] Visual representation of CNN model architecture to facilitate interpretation.
-%     \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
-% \end{description}
+\begin{description}[style=nextline]
+    \item[Feature Visualization:] Visual depiction of both given and derived features for enhanced understanding.
+    \item[Convolution Neural Network:] Visual representation of CNN model architecture to facilitate interpretation.
+    \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
+\end{description}
 
 \subsection{Feature Visualization}\label{feature_visualization}
 
-\subsubsection{Signal to Noise Raio}\label{snr}
+\subsubsection{Frequency Graph of LOS and NLOS}\label{frequency_graph}
 
 \begin{figure}[H] 
 	\centering
@@ -287,7 +397,16 @@ This section encompasses the graphical representation of data features and model
 	\caption{Frequency Graph of LOS and NLOS}\label{fig:frequency_graph}
 \end{figure}
 
-\subsubsection{Signal to Noise Raio}\label{snr}
+\subsubsection{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{frequency_graph_wavelet}
+
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=0.50\textwidth]{Wavelet_Denoised_LOS_Frequency_Graph.png}
+  \includegraphics[width=0.50\textwidth]{Wavelet_Denoised_NLOS_Frequency_Graph.png}
+  \caption{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{fig:frequency_graph_wavelet}
+\end{figure}
+
+\subsubsection{Signal to Noise Raio}\label{sur_visual}
 
 \begin{figure}[H] % [H] forces the figure to be placed exactly where it appears in the text
 	\centering % Horizontally center the figure
