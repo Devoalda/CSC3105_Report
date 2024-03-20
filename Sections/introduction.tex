@@ -1,0 +1,72 @@
+% START of Jovian's draft for JW's verdict ): %
+% DON TOUCH HERE unless u want to add on stuff %
+\section{Background}\label{background}
+
+\subsection{Emergence of IoT and Indoor Positioning Needs}\label{Emergence of IoT and Indoor Positioning Needs}
+The advent of the Internet of Things (IoT) has revolutionized how we interact with our environment, giving rise to an increased demand for precise Indoor Positioning Systems (IPS). Applications range from pedestrian tracking to autonomous drones in logistics and social distancing protocols, all requiring reliable localization technologies.
+
+\subsection{Limitations of GNSS in Indoor Environments}\label{Limitations of GNSS in Indoor Environments}
+While the Global Navigation Satelite System (GNSS) has been a cornerstone for ourdoor localization, its effectiveness is drastically reduced indoors due to signal attentuation by obstacles like walls, making it unsuitable for indoor use.
+
+\subsection{The Promise of UWB Technology}\label{The Promise of UWB Technology}
+Ultra-Wideband (UWB) technology, with its short pulse duration, offers high temporal resolution, enabling high accuracy in IPS. Nonetheless, the accuracy of Ultra-wideband (UWB) systems is compromised under Non-Line-Of-Sight (NLOS) conditions, where signal obstructions or reflections occur, presenting a substantial hurdle due to the resulting deterioration in localization precision.
+
+\subsection{Current NLOS Identification Methods}\label{Current NLOS Identification Methods}
+The academic and industrial sectors have explored numerous methodologies to mitigate the NLOS issue in UWB systems. These range from non-feature-based approaches, leveraging contextual information, to feature-based methods that extract distinct waveform characteristics to identify NLOS conditions using maching learning (ML) techniques.
+
+\subsection{Challenges and Limitations}\label{Challenges and Limitations}
+Although ML has emerged as a promising solution for NLOS identification, existing feature-based approaches face challenges, particularly with imbalanced datasets where NLOS samples are scarce. This affects the robustness of the classifiers being trained.
+
+
+\section{Introduction}\label{introduction}
+In the field of signal processing and analytics, particularly within the context of Ultra-Wideband (UWB) Internet of Things (IoT) sensor technology, challenges such as data inaccuracies and vulnerability to noise and interference are prevalent. Recognizing the limitations inherent in conventional machine learning (ML) techniques, especially when dealing with imbalanced datasets typical of real-world applications, our project seeks to navigate these challenges by leveraging advanced ML algorithms and methodologies. Inspired by the innovative work of \cite{jiang_uwb_2020} on data preprocessing and denoising, as well as the feature-based distance calculation method proposed by \cite{che_feature-based_2022}, our initiative aims to enhance UWB localization precision through the differentiation of Line-of-Sight (LOS) and Non-Line-of-Sight (NLOS) conditions using a novel machine learning approach.
+
+A pivotal element of our approach is the introduction of a proprietary distance formula designed to estimate distances more accurately within the UWB environment. This formula is expressed as:
+
+\begin{equation}
+\text{Total Distance} = \sum_{i=1}^{n} |CIR_i| \cdot c
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
+  \item $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
+\end{itemize}
+
+This formula facilitates distance estimation based on the cumulative Channel Impulse Response and the speed of light in nanoseconds. However, it is noteworthy that this derived feature is not utilized as part of the data mining process.
+
+
+\section{Objective}\label{objective}
+The cornerstone of this project is to forge a machine learning model adept at discerning between LOS and NLOS conditions based on Channel Impulse Response (CIR) measurements from UWB sensors. This ambition will be pursued through a holistic three-dimensional process comprising Data Preprocessing, Data Mining, and Data Visualization stages. By meticulously navigating through these phases, we aim to not only address the data imbalances and inaccuracies inherent in UWB sensor data but also to cultivate a comprehensive understanding of the dataset. The ultimate objective is to foster a robust classification model that maintains its efficacy across both LOS and NLOS scenarios, thereby elevating the accuracy and reliability of UWB-based Indoor Positioning Systems (IPS). Through this endeavor, we aspire to contribute significantly to the optimization of UWB localization technologies, ensuring their adaptability and effectiveness in diverse environmental conditions.
+
+
+% % og intro, if above ok can combine / remove %
+% \section{Introduction}\label{introduction}
+% In the realm of signal processing and analytics, a diverse array of operations is available for data preprocessing, model training (data mining), and visualization. Notably, signal data acquired from Ultra-Wideband (UWB) Internet of Things (IoT) sensors often exhibits inherent inaccuracies and susceptibility to noise and interference.
+
+% \cite{jiang_uwb_2020} introduced a novel methodology for data preprocessing and denoising in their seminal work. Moreover, they advocated for the utilization of sophisticated unsupervised machine learning algorithms, including Support Vector Machines (SVM), Convolutional Neural Networks (CNN), and Multilayer Perceptrons (MLP), for modeling the intricate dynamics of the acquired data.
+
+% Their pioneering approach not only addresses the challenges associated with noisy UWB IoT sensor data but also underscores the efficacy of employing advanced machine learning techniques for insightful data analysis and interpretation.
+
+% An approach to calculate distance, as introduced by \cite{che_feature-based_2022}, involves leveraging Time-Of-Arrival (TOA) and Trilateration methodologies. However, due to the absence of detailed anchorpoint information, the Trilateration approach could not be executed. Instead, a modified formula was employed:
+
+
+% \begin{equation}
+% \text{Total Distance} = \sum_{i=1}^{n} |CIR_i| \cdot c
+% \end{equation}
+
+% where:
+
+% \begin{itemize}
+%   \item $CIR_i$ represents the Channel Impulse Response for the $i$-th anchor point.
+%   \item $c$ is the speed of light in a vacuum, approximately $2.99792458 \times 10^8 \text{ m/s}$. We can use a constant value here for simplicity, assuming the context focuses on light propagation.
+% \end{itemize}
+
+% This formula facilitates distance estimation based on the cumulative Channel Impulse Response and the speed of light in nanoseconds. However, it's noteworthy that this derived feature is not utilized as part of the data mining process.
+
+
+
+% \subsection{Objective}\label{objective}
+
+% The primary aim of this assignment is to develop a model capable of discerning whether a given set of Channel Impulse Response (CIR) measurements corresponds to Line-of-Sight (LOS) or Non-Line-of-Sight (NLOS) scenarios. This entails the comprehensive execution of the three-dimensional process, encompassing Data Preprocessing, Data Mining, and Data Visualization. By diligently executing each phase of this process, the objective is to achieve a robust and insightful understanding of the dataset, culminating in the successful training of a model capable of accurate classification.

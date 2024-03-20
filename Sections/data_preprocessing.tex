@@ -1,0 +1,167 @@
+\section{Data Preprocessing}\label{data_preprocessing}
+
+This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis.
+
+\begin{description}[style=nextline]
+    \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
+    \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
+    \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
+    \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
+    \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
+\end{description}
+
+\subsection{Feature Extraction}\label{feature_extraction}
+
+
+\subsection{Feature Derivation}\label{feature_derivation}
+
+This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models.
+
+\subsubsection{First Path Power Level}\label{first_path_power_level}
+
+The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (CIR). It is calculated using the following equation:
+
+\begin{equation}
+  \text{First Path Power Level} = 10 \cdot \log_{10} \left( \frac{F_1^2 + F_2^2 + F_3^2}{N^2} \right) - A
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $F_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the CIR ($i = 1, 2, 3$)
+  \item $N$ (Current variable name: $RXPACC$): Receiver path accumulation length
+  \item $A$ (Current variable name: $PRFR$):Pulse Repetition Frequncy Rate (typically 64)
+\end{itemize}
+
+\subsubsection{RX Level}\label{rx_level}
+
+The RX Level quantifies the received signal strength relative to the receiver sensitivity threshold. It is computed as:
+
+\begin{equation}
+  \text{RX\_Level} =
+  \begin{cases}
+    0 & \text{if } \frac{P_{cir} \cdot 2^{17}}{N^2} = 0 \\
+    10 \cdot \log_{10} \left( \frac{C \cdot 2^{17}}{N^2} \right) - A & \text{otherwise}
+  \end{cases}
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $C$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $N$ (Current variable name: $RXPACC$): Receiver path accumulation length
+  \item $PRFR$ (Current variable name unchanged): Pulse Repetition Frequency Rate in MHz
+\end{itemize}
+
+The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
+
+\subsubsection{Signal-to-Noise Ratio (SNR)}\label{snr}
+
+The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the received signal relative to the noise level. It is computed as:
+
+\begin{equation}
+  \text{SNR} = \frac{P_{cir}}{\sigma_n}
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $\sigma_n$ (Current variable name $STDEV\_NOISE$): Standard deviation of the noise
+\end{itemize}
+
+The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
+
+\subsection{Feature Reduction}\label{feature_reduction}
+
+% Double check ALL formula, maybe cite or something idk
+\subsection{De-Noise Functions}\label{de_noise_Functions}
+
+In the paper by \cite{jiang_uwb_2020}, the authors proposed a novel denoising approach for UWB signals. They employed the Lucy-Richardson algorithm, a well-known deconvolution algorithm, to remove noise and enhance the quality of the received signal. The algorithm operates by iteratively estimating the original signal from the observed signal and the point spread function (PSF), which characterizes the blurring effect on the signal due to noise and other factors. The authors demonstrated the effectiveness of the Lucy-Richardson algorithm in denoising UWB signals and improving the accuracy of localization systems. The algorithm was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+However, they also suggested that the Wavelet Transformation approach is used more commonly in practice due to its simplicity and effectiveness. The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for the removal of noise and the extraction of important features from the signal. The authors demonstrated the effectiveness of the Wavelet Transformation approach in denoising UWB signals and improving the accuracy of localization systems. The approach was shown to effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+In this section, we will explore the implementation of the Wavelet Transformation approach to denoise the UWB signals and enhance the quality of the received signal. We will also evaluate the effectiveness of the approach in improving the accuracy of the localization system and discuss its potential advantages and limitations.
+
+\subsubsection{Wavelet Transformation}\label{wavelet_transformation}
+
+The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for removal of noise and extraction of important features from the signal. The approach has been widely used in signal processing and data analysis due to its simplicity and effectiveness. The Wavelet Transformation approach is particularly well-suited for denoising UWB signals, as it can effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+
+\textbf{Equation for Wavelet Transform:}
+
+The Discrete Wavelet Transform (DWT) is commonly used for signal denoising. Here, the signal $x(t)$ is decomposed into a set of wavelet coefficients $W_f(a, \tau)$ at different scales $a$ and translations $\tau$:
+
+\begin{equation}
+W_f(a, \tau) = \int_{-\infty}^{\infty} x(t) \psi_{a, \tau}(t) dt
+\end{equation}
+
+where:
+
+\begin{itemize}
+  \item $W_f(a, \tau)$ represents wavelet coefficients
+  \item $x(t)$ is the original signal
+  \item $\psi_{a, \tau}(t)$ is the wavelet function (mother wavelet)
+  \item $a$ is the scale parameter (controls wavelet's width)
+  \item $\tau$ is the translation parameter (controls wavelet's position)
+\end{itemize}
+
+The denoising process involves applying a thresholding function to the wavelet coefficients, removing noise components and keeping the significant signal components. The reconstructed signal $x'(t)$ is obtained by integrating the denoised wavelet coefficients over all scales and translations:
+
+The wavelet Daubechies wavelet is used to transform the LOS and NLOS signals. The transformed signals are then denoised using the Wavelet Transformation approach, which effectively removes noise and enhances the quality of the received signal. The denoised signals are then used as input to the machine learning models for training and testing.
+
+\begin{equation}
+x'(t) = \int_{-\infty}^{\infty} \sum_{a} W_f'(a, \tau) \psi_{a, \tau}(t) \frac{da d\tau}{a^2}
+\end{equation}
+
+where 
+
+\begin{itemize}
+  \item $W_f'(a, \tau)$: Denoised wavelet coefficients
+  \item $\psi_{a, \tau}(t)$: Translated and scaled wavelet function
+  \item $a$: Scale parameter
+  \item $\tau$: Translation parameter
+\end{itemize}
+
+This approach is used to denoise the UWB CIR signals and enhance the quality of the received signal. The Wavelet Transformation approach has been shown to effectively remove noise and improve the accuracy of UWB localization systems. It is a simple and effective method for denoising UWB signals and enhancing the quality of the received signal, and it has the potential to improve the accuracy and reliability of UWB localization systems. It is used in the Data Mining phase during the model training process to improve the quality of the input data and enhance the performance of the machine learning models.
+
+A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_wavelet}.
+
+\subsubsection{Lucy-Richardson Algorithm}
+
+Given observed signal $I$ (cir\_values) and point spread function (PSF) $h$ (psf), the Richardson-Lucy algorithm aims to estimate the original signal $J$ through iterative refinement. The algorithm iteratively updates the estimate $J^{(k)}$ according to the following formula:
+
+\begin{equation}
+J^{(k+1)} = J^{(k)} \otimes \left( \frac{I}{(J^{(k)} \otimes h)} \right) \otimes h^T
+\end{equation}
+
+Where:
+\begin{itemize}
+    \item $J^{(k)}$ is the estimate of the original signal at iteration $k$.
+    \item $\otimes$ denotes the convolution operation.
+    \item $h^T$ represents the transpose of the PSF. 
+\end{itemize}
+
+
+The algorithm terminates after a specified number of iterations or upon reaching convergence criteria.
+
+In the context of Python programming, this algorithm can be implemented using the following function:
+
+\begin{verbatim}
+def deconvolve_cir(cir_values, psf=None, iterations=50):
+    # If no point spread function is provided, create a simple one
+    if psf is None:
+        psf = np.ones((5,)) / 5
+
+    # Perform Richardson-Lucy deconvolution
+    deconvolved_cir = restoration.richardson_lucy(
+        cir_values, 
+        psf, 
+        num_iter=iterations
+    )
+
+    return deconvolved_cir
+\end{verbatim}
+
+This function takes circular (shifted) impulse response (CIR) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved CIR.
+
+A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_lr}. Notice that figure \ref{fig:frequency_graph_lr} shows a almost straight line across the graph, this might be due to the incorrect use of the function. Figure \ref{fig:frequency_graph_lr_scaled} shows a cleared, scaled image. This was not used in the Data mining phase due to its low variance as visualised in both figures.
