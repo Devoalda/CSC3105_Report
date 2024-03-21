@@ -12,10 +12,12 @@ This section encompasses various preparatory procedures aimed at optimizing the 
 
 \subsection{Feature Extraction}\label{feature_extraction}
 
+No Features were extracted during preprocessing stage due to nature of the models used to model the data.
+
 
 \subsection{Feature Derivation}\label{feature_derivation}
 
-This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models.
+This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models. Most of the features were derived from the formula provided in \cite{DecawaveDW1000}.
 
 \subsubsection{First Path Power Level}\label{first_path_power_level}
 
@@ -35,12 +37,12 @@ where:
 
 \subsubsection{RX Level}\label{rx_level}
 
-The RX Level quantifies the received signal strength relative to the receiver sensitivity threshold. It is computed as:
+The RX Level metric assesses the received signal strength relative to the receiver sensitivity threshold. Its computation is described by the following formula:
 
 \begin{equation}
   \text{RX\_Level} =
   \begin{cases}
-    0 & \text{if } \frac{P_{cir} \cdot 2^{17}}{N^2} = 0 \\
+    \text{median}(RX\_Values) & \text{if } C = 0 \\
     10 \cdot \log_{10} \left( \frac{C \cdot 2^{17}}{N^2} \right) - A & \text{otherwise}
   \end{cases}
 \end{equation}
@@ -53,7 +55,8 @@ where:
   \item $PRFR$ (Current variable name unchanged): Pulse Repetition Frequency Rate in MHz
 \end{itemize}
 
-The median operation is employed to handle instances where the initial expression for RX Level yields a zero value, thus preventing undefined results.
+In scenarios where the condition $C = 0$ holds, the RX Level is determined by taking the median value of all RX values. This approach ensures robustness against outliers and prevents the generation of undefined results.
+
 
 \subsubsection{Signal-to-Noise Ratio (SNR)}\label{snr}
 
@@ -85,11 +88,11 @@ In this section, we will explore the implementation of the Wavelet Transformatio
 
 \subsubsection{Wavelet Transformation}\label{wavelet_transformation}
 
-The Wavelet Transformation approach involves decomposing the signal into different frequency bands using wavelet functions, which allows for removal of noise and extraction of important features from the signal. The approach has been widely used in signal processing and data analysis due to its simplicity and effectiveness. The Wavelet Transformation approach is particularly well-suited for denoising UWB signals, as it can effectively remove noise and enhance the quality of the received signal, leading to improved localization accuracy and reliability.
+The Wavelet Transformation approach involves decomposing signals into different frequency bands using wavelet functions, facilitating noise removal and feature extraction. Widely utilized in signal processing and data analysis, this method is particularly effective for denoising Ultra-Wideband (UWB) signals, enhancing localization accuracy and reliability.
 
 \textbf{Equation for Wavelet Transform:}
 
-The Discrete Wavelet Transform (DWT) is commonly used for signal denoising. Here, the signal $x(t)$ is decomposed into a set of wavelet coefficients $W_f(a, \tau)$ at different scales $a$ and translations $\tau$:
+The Discrete Wavelet Transform (DWT) decomposes the signal $x(t)$ into wavelet coefficients $W_f(a, \tau)$ at various scales $a$ and translations $\tau$:
 
 \begin{equation}
 W_f(a, \tau) = \int_{-\infty}^{\infty} x(t) \psi_{a, \tau}(t) dt
@@ -101,30 +104,15 @@ where:
   \item $W_f(a, \tau)$ represents wavelet coefficients
   \item $x(t)$ is the original signal
   \item $\psi_{a, \tau}(t)$ is the wavelet function (mother wavelet)
-  \item $a$ is the scale parameter (controls wavelet's width)
-  \item $\tau$ is the translation parameter (controls wavelet's position)
+  \item $a$ is the scale parameter (controlling wavelet's width)
+  \item $\tau$ is the translation parameter (controlling wavelet's position)
 \end{itemize}
 
-The denoising process involves applying a thresholding function to the wavelet coefficients, removing noise components and keeping the significant signal components. The reconstructed signal $x'(t)$ is obtained by integrating the denoised wavelet coefficients over all scales and translations:
+The denoising process involves applying a thresholding function to the wavelet coefficients, retaining significant signal components while removing noise.
 
-The wavelet Daubechies wavelet is used to transform the LOS and NLOS signals. The transformed signals are then denoised using the Wavelet Transformation approach, which effectively removes noise and enhances the quality of the received signal. The denoised signals are then used as input to the machine learning models for training and testing.
+Utilizing the Daubechies wavelet, LOS and NLOS signals are transformed, enhancing signal quality by noise removal. The denoised signals serve as input for training and testing machine learning models.
 
-\begin{equation}
-x'(t) = \int_{-\infty}^{\infty} \sum_{a} W_f'(a, \tau) \psi_{a, \tau}(t) \frac{da d\tau}{a^2}
-\end{equation}
-
-where 
-
-\begin{itemize}
-  \item $W_f'(a, \tau)$: Denoised wavelet coefficients
-  \item $\psi_{a, \tau}(t)$: Translated and scaled wavelet function
-  \item $a$: Scale parameter
-  \item $\tau$: Translation parameter
-\end{itemize}
-
-This approach is used to denoise the UWB CIR signals and enhance the quality of the received signal. The Wavelet Transformation approach has been shown to effectively remove noise and improve the accuracy of UWB localization systems. It is a simple and effective method for denoising UWB signals and enhancing the quality of the received signal, and it has the potential to improve the accuracy and reliability of UWB localization systems. It is used in the Data Mining phase during the model training process to improve the quality of the input data and enhance the performance of the machine learning models.
-
-A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_wavelet}.
+The Wavelet Transformation approach is instrumental in denoising UWB signals and improving localization accuracy. Its simplicity and effectiveness make it a valuable tool in enhancing signal quality and subsequently improving the performance of machine learning models.
 
 \subsubsection{Lucy-Richardson Algorithm}
 
@@ -164,4 +152,13 @@ def deconvolve_cir(cir_values, psf=None, iterations=50):
 
 This function takes circular (shifted) impulse response (CIR) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved CIR.
 
-A visual of the frequency graph of the wavelet transformed LOS and NLOS signals is shown at Section \ref{frequency_graph_lr}. Notice that figure \ref{fig:frequency_graph_lr} shows a almost straight line across the graph, this might be due to the incorrect use of the function. Figure \ref{fig:frequency_graph_lr_scaled} shows a cleared, scaled image. This was not used in the Data mining phase due to its low variance as visualised in both figures.
+A visualization depicting the frequency graph of the wavelet-transformed Line-of-Sight (LOS) and Non-Line-of-Sight (NLOS) signals is presented in Section \ref{frequency_graph_lr}. Notably, Figure \ref{fig:frequency_graph_lr} exhibits an almost linear trend across the graph, suggesting a potential misapplication of the underlying function. Conversely, Figure \ref{fig:frequency_graph_lr_scaled} portrays a cleaned and scaled rendition of the frequency graph. Despite its improved clarity, this visualization was omitted from the Data Mining phase due to its notably low variance, as evidenced by both figures.
+
+\subsection{Summary and Justifications}
+
+In the model training process, certain features were selected while others were omitted based on their relevance and potential impact on model performance. Specifically, features such as RX Level, First Path Power Level, and Signal to Noise Ratio were deemed significant and thus retained for inclusion in the model training dataset. Conversely, features such as Channel ('CH') and Bitrate ('BITRATE') were excluded due to possessing only a single unique value, rendering them incapable of providing meaningful information for model learning and inference.
+
+Furthermore, the decision was made to replace the CIR columns ('CIR0 - CIR1015') with their Wavelet-Transformed counterparts, as detailed in Section \ref{wavelet_transformation}. This transformation was chosen to enhance the model's ability to discern salient patterns within the CIR signals, thereby improving classification accuracy.
+
+Regarding the choice not to pre-reduce features before inputting them into the convolutional neural network (CNN), it was reasoned that manually extracting features might overlook crucial information pertinent to the classification task. CNNs are adept at autonomously learning discriminative features directly from raw data during the training phase, a capability that often leads to superior model performance. By allowing the CNN to extract features from the UWB CIR signals organically, the model can effectively discern the most relevant information for accurate classification, thereby mitigating the risk of feature reduction potentially discarding crucial discriminative features.
+
