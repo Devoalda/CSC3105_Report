@@ -10,6 +10,16 @@ In this section, various data mining techniques are employed to extract meaningf
     \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
 \end{description}
 
+\newglossaryentry{cnn}
+{
+    name=cnn,
+    description={Convolution Neural Network}
+}
+\newglossaryentry{mlp}
+{
+    name=mlp,
+    description={Multilayer Perceptron}
+}
 
 In our study, we opted for Convolutional Neural Network (CNN) and Multilayer Perceptron (MLP) models as our primary machine learning approaches, drawing upon their inherent capabilities in feature extraction and representation, as suggested by \cite{jiang_uwb_2020}. To ensure robust model evaluation, the dataset is partitioned into training and testing sets following an 80:20 ratio, facilitating comprehensive assessment while maintaining data representativeness.
 
@@ -19,6 +29,7 @@ Prior to model training, a crucial preprocessing step involves feature scaling u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CNN  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \subsection{Convolution Neural Network (CNN)}\label{cnn}
 
@@ -127,6 +138,7 @@ In summary, the CNN model shows promising performance for signal classification 
 
 \subsubsection{CNN Model Performance (DFT-Transformed CIR Dataset)}
 
+% Ben ben ? %
 
 
 \subsubsection{Possible Improvements}
@@ -213,7 +225,7 @@ This operation essentially performs a weighted sum of the inputs, similar to lin
 
 This section provides a summary of the Multilayer Perceptron (MLP) model's performance in signal classification.
 
-% % Some figures from training %
+% Some figures from training %
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{mlp/Mlp_training_and_accuracy_plot}
@@ -243,6 +255,32 @@ The Multilayer Perceptron (MLP) model achieved a test accuracy of 84.61\% with a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{MLP Model Performance (DFT-Transformed CIR Dataset)}
 
+This section provides a summary of the Multilayer Perceptron (MLP) model's performance in signal classification after performing DFT.
+
+% Some figures from training %
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{mlp/Mlp_training_and_accuracy_plot_DFT}
+	\caption{MLP Training and Test Accuracy Plot DFT}\label{fig:Mlp_training_and_accuracy_plot_DFT}
+\end{figure}
+
+The MLP model achieved increasing training accuracy over 20 epochs, suggesting it learned patterns in the NLOS/LOS data. However, the test accuracy remained consistently higher, which could indicate possible overfitting or a potentially simpler test set.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{mlp/Mlp_training_and_validation_loss_plot_DFT}
+	\caption{MLP Training and Validation Loss Plot DFT}\label{fig:Mlp_training_and_validation_loss_plot_DFT}
+\end{figure}
+
+The MLP model's training and validation loss curves show a steady decrease over epochs, indicating successful learning of NLOS/LOS data patterns. The validation loss curve remains slightly higher than the training loss curve, suggesting good generalization and avoiding overfitting to the training data. This implies the model is effectively reducing loss (improving performance) on both the training and unseen validation data.
+
+\begin{figure}[H] 
+	\centering
+	\includegraphics[width=0.50\textwidth]{mlp/Mlp_classification_report_DFT}
+	\caption{Mlp Classification Report DFT}\label{fig:Mlp_classification_report_DFT}
+\end{figure}
+
+The MLP model achieved a promising 87\% accuracy on unseen data for NLOS/LOS classification. Precision (around 90\%) and F1-scores (around 87\%) were well-balanced across both classes, indicating good overall performance. The model is more likely to miss LOS signals compared to NLOS signals (82\% recall for LOS vs 93\% for NLOS), suggesting potential for improvement in handling LOS signal variations. Despite a test loss of 0.375, the model shows promise for NLOS/LOS classification, with further exploration possible to enhance its ability to classify diverse LOS signals.
 
 \subsubsection{Possible Improvements}
 

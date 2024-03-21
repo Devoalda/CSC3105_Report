@@ -31,6 +31,7 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{import}
+\usepackage[toc]{glossaries}
 
 %----------------------------------------------------------------------------------------
 %	REPORT INFORMATION
@@ -48,23 +49,47 @@
 
 \date{\today} % Date of the report
 
+\makeglossaries
+
 %----------------------------------------------------------------------------------------
 
 \begin{document}
 
 \maketitle % Insert the title, author and date using the information specified above
 
-%\pagebreak
+\pagebreak
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% introduction 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \import{Sections/}{introduction.tex}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Data Preprocesing 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\pagebreak
 \import{Sections/}{data_preprocessing.tex}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Data Mining 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\pagebreak
 \import{Sections/}{data_mining.tex}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Data Visualisation
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\pagebreak
 \import{Sections/}{data_visualisation.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+\printglossary
 
 % Might have use? %
 
