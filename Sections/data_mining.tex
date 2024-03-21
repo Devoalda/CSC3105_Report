@@ -125,6 +125,9 @@ The overall accuracy of the model is 0.8646, indicating that it correctly classi
 
 In summary, the CNN model shows promising performance for signal classification tasks, with notable strengths in precision. However, there are areas for improvement, particularly in enhancing the recall for LOS instances. Considering class imbalance and the relative importance of precision and recall can offer valuable insights for refining the model's performance in binary classification tasks.
 
+\subsubsection{CNN Model Performance (DFT-Transformed CIR Dataset)}
+
+
 
 \subsubsection{Possible Improvements}
 
@@ -141,7 +144,6 @@ In conclusion, the CNN model presents a promising foundation for Ultra-Wideband 
 % MLP 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% todo(ben): refactor this entire section to follow same layout as cnn for subsubheaders %
 \subsection{Multilayer Perceptron (MLP)}\label{mlp}                                                                                 
 The Multilayer Perceptron (MLP) model is a class of feedforward artificial neural network that consists of at least three layers of nodes: an input layer, a hidden layer, and an output layer. MLPs are known for their ability to handle complex, non-linear relationships within the dataset, making them suitable for a wide range of classification tasks. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
 
@@ -182,24 +184,6 @@ An EarlyStopping callback is employed to monitor the validation loss during trai
 \subsubsection{Training Parameters}
 
 The model is trained for 20 epochs with a batch size of 32. The training history is captured to visualize the learning process and assess the model's performance over time.
-
-% \begin{itemize}
-%     \item \textbf{Dense layers:} The model utilizes a sequential stack of Dense layers with ReLU activation for non-linearity. The first layer has 64 units, followed by layers with 32 and 16 units respectively. The final layer has a single unit with a sigmoid activation function suitable for binary classification (NLOS vs. LOS).
-%     \item \textbf{Regularization Techniques:} L2 regularization with a weight decay of 0.001 is applied to each Dense layer to penalize large weights and encourage smoother decision boundaries, reducing overfitting.
-%     \item \textbf{Normalization and Dropout:} BatchNormalization layers are inserted after each Dense layer to improve training speed and stability by normalizing activations. Dropout layers with a rate of 0.5 are strategically placed after BatchNormalization to randomly drop a fraction of activations during training, further preventing overfitting by encouraging the model to learn robust features that are not dependent on specific input units.
-% \end{itemize}
-
-% \subsubsection{Model Compilation and Training}
-
-% \begin{itemize}
-%     \item \textbf{Early Stopping:} An EarlyStopping callback monitors the validation loss during training. Training is halted if the validation loss fails to improve for 10 consecutive epochs, preventing overfitting.
-%     \item \textbf{Model Compilation:} The model is compiled using the Adam optimizer with a learning rate of 0.0001 and binary cross-entropy loss function, suitable for binary classification tasks. Accuracy is chosen as the primary evaluation metric.
-%     \item \textbf{Training Process:} The model is trained for 20 epochs with a batch size of 32. The training history is captured to visualize the learning process later.
-% \end{itemize}
-
-% In this model, the ReLU (Rectified Linear Unit) activation function is used in the hidden layers, introducing a threshold for activation. The sigmoid function is used in the output layer, as it maps the output between 0 and 1, suitable for binary classification tasks (NLOS vs. LOS).
-
-% The MLP model utilizes the Adam optimization algorithm, which dynamically adjusts the weights and biases throughout the training process. Adam optimizes these parameters to minimize the binary cross-entropy loss function, which quantifies the disparity between the model's predictions and the actual labels. Minimizing this loss function enables the model to enhance its ability to accurately classify the input data, making it a crucial component of the training process.
 
 \subsubsection{Multilayer Perceptron Operation}
 
@@ -253,6 +237,12 @@ Additionally, the training and validation loss over time plot for this model sho
 \end{figure}
 
 The Multilayer Perceptron (MLP) model achieved a test accuracy of 84.61\% with a test loss of 0.42. The precision for NLOS (class 0) was 81\% and for LOS (class 1) was 89\%, indicating a high level of precision in predicting both classes. The recall for NLOS was 90\% and for LOS was 79\%, showing that the model performs better at identifying NLOS instances. The F1-score, which balances precision and recall, was 85\% for NLOS and 84\% for LOS. Overall, the model demonstrates good performance in classifying NLOS and LOS instances, although there is potential for improvement in the recall for LOS to achieve a more balanced performance across both classes.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% For New Dataset
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{MLP Model Performance (DFT-Transformed CIR Dataset)}
+
 
 \subsubsection{Possible Improvements}
 

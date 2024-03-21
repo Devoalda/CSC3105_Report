@@ -9,6 +9,13 @@ This section encompasses the graphical representation of data features and model
     \item[Multilayer Perceptron:] Visual depiction of MLP model architecture for improved insight into its workings.
 \end{description}
 
+% jovian+GPT4 send help %
+
+% Need to justify why these features were selected for visualisation,
+% Comparison between original + derived Feature
+% Its significance in Training CNN + MLP Model 
+% Possibly any citations might be good too
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Feature Visualisation 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,37 +25,63 @@ This section encompasses the graphical representation of data features and model
 
 \begin{figure}[H] 
 	\centering
-	\includegraphics[width=1\textwidth]{preprocessing/LOS_Frequency_Graph.png}
-	\includegraphics[width=1\textwidth]{preprocessing/NLOS_Frequency_Graph.png}
+	\includegraphics[width=0.4\textwidth]{preprocessing/LOS_Frequency_Graph.png}
+	\includegraphics[width=0.4\textwidth]{preprocessing/NLOS_Frequency_Graph.png}
 	\caption{Frequency Graph of LOS and NLOS}\label{fig:frequency_graph}
 \end{figure}
+
+
+Upon examining both LOS and NLOS CIR plots, several key observations emerge. Firstly, both plots display a prominent initial signal followed by a gradual decay over time. However, notable differences exist between the two scenarios. The LOS channel exhibits a stronger initial magnitude and a steeper decay compared to the NLOS channel, suggesting less signal distortion in the LOS scenario.
+
+These observations have profound implications for machine learning models, particularly Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). While CIR data can serve as valuable input features for tasks like channel estimation or signal classification, raw CIR data may not be optimal for these models due to its complex nature.
+
+To address this challenge, various data transformation techniques can be employed. The Discrete Fourier Transform (DFT) offers a method to convert CIR data into the frequency domain, enabling focused analysis on specific frequency bands relevant to the machine learning model. Additionally, the Wavelet Transform allows for comprehensive analysis of both time and frequency information embedded in the CIR data, potentially enhancing the model's understanding.
+
+Moreover, techniques like Lucy-Richardson Deconvolution can be utilized to mitigate channel distortion in the CIR data, resulting in cleaner signals for the model to learn from. By integrating these data transformation techniques into the preprocessing stage, the effectiveness of CNNs and MLPs for tasks involving channel characterization can be significantly enhanced, ultimately leading to more robust and accurate communication systems.
+
+
 
 \subsubsection{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{frequency_graph_wavelet}
 
 \begin{figure}[H] 
   \centering
-  \includegraphics[width=1\textwidth]{preprocessing/Wavelet_Denoised_LOS_Frequency_Graph.png}
-  \includegraphics[width=1\textwidth]{preprocessing/Wavelet_Denoised_NLOS_Frequency_Graph.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/Wavelet_Denoised_LOS_Frequency_Graph.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/Wavelet_Denoised_NLOS_Frequency_Graph.png}
   \caption{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{fig:frequency_graph_wavelet}
 \end{figure}
+
+A comparison between the original and denoised NLOS Channel Impulse Response (CIR) graphs reveals distinct differences. The original NLOS graph exhibits notable noise, characterized by fluctuations in magnitude, which can potentially obscure the underlying signal. In contrast, the denoised NLOS graph, resulting from successful wavelet denoising, presents a smoother profile, effectively removing noise while preserving the essential features of the signal.
+
+Both the original and denoised LOS and NLOS CIR graphs demonstrate suitability for training Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). However, to enhance model performance, data pre-processing is recommended. 
+
+Raw Channel Impulse Response (CIR) data may not be optimal for CNNs and MLPs due to its inherent complexity. Employing data transformation techniques such as the Discrete Fourier Transform (DFT) and Wavelet Transform can address this issue. The DFT allows focusing on specific frequency bands of interest, while the Wavelet Transform offers a more comprehensive time-frequency representation. Even denoised data can benefit from these transformations, potentially improving model performance significantly.
+
+By integrating these pre-processing techniques into the workflow and transforming the CIR data (whether original or denoised) before training, CNNs and MLPs can effectively tackle tasks like channel estimation or signal classification, contributing to the development of robust communication systems.
 
 \subsubsection{Frequency Graph of Lucy-Richardson Transformation LOS and NLOS}\label{frequency_graph_lr}
 
 \begin{figure}[H] 
   \centering
-  \includegraphics[width=1\textwidth]{preprocessing/lr_denoise_LOS.png}
-  \includegraphics[width=1\textwidth]{preprocessing/lr_denoise_NLOS.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/lr_denoise_LOS.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/lr_denoise_NLOS.png}
   \caption{Frequency Graph of Lucy-Richardson(Unscaled) LOS and NLOS}\label{fig:frequency_graph_lr}
 \end{figure}
 
 \begin{figure}[H] 
   \centering
-  \includegraphics[width=1\textwidth]{preprocessing/lr_denoise_LOS_Scaled.png}
-  \includegraphics[width=1\textwidth]{preprocessing/lr_denoise_NLOS_Scaled.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/lr_denoise_LOS_Scaled.png}
+  \includegraphics[width=0.4\textwidth]{preprocessing/lr_denoise_NLOS_Scaled.png}
   \caption{Frequency Graph of Lucy-Richardson(scaled) LOS and NLOS}\label{fig:frequency_graph_lr_scaled}
 \end{figure}
 
-\subsubsection{Signal to Noise Ratio}\label{sur_visual}
+\begin{figure}[H] 
+  \centering
+  \includegraphics[width=1\textwidth]{preprocessing/DFT_LOS.jpg}
+  \includegraphics[width=1\textwidth]{preprocessing/DFT_NLOS.jpg}
+  \caption{Frequency Graph of Discrete Fourier Transformed CIR values (LOS and NLOS)}\label{fig:frequency_graph_dft}
+\end{figure}
+
+\subsubsection{Signal to Noise Ratio}\label{snr_visual}
 
 \begin{figure}[H] % [H] forces the figure to be placed exactly where it appears in the text
 	\centering % Horizontally center the figure
@@ -87,6 +120,8 @@ This section encompasses the graphical representation of data features and model
   \caption{CNN ROC Curve Evaluation}\label{fig:cnn_roc_curve}
 \end{figure}
 
+\subsection{Convolution Neural Network With DFT CIR Data}\label{cnn_visual_dft}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MLP Visualisation
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -117,11 +152,12 @@ This section encompasses the graphical representation of data features and model
   \caption{MLP Weights and Biases Evaluation}\label{fig:dense3_bias3}
 \end{figure}
 
-The weights and biases of the MLP model layers were visualized to understand their distributions. The weights in all layers (dense_20, dense_21, dense_22, and dense_23) are not close to zero, indicating they are likely being updated during training and contributing to the model’s learning. The weight distributions show a spread around zero, suggesting the model is capturing complex relationships in the data.
+The weights and biases of the MLP model layers were visualized to understand their distributions. The weights in all layers (\texttt{dense\_20}, \texttt{dense\_21}, \texttt{dense\_22}, and \texttt{dense\_23}) are not close to zero, indicating they are likely being updated during training and contributing to the model’s learning. The weight distributions show a spread around zero, suggesting the model is capturing complex relationships in the data.
 
-The biases in dense_20 and dense_22 introduce a slight positive bias to the activations in subsequent layers, potentially affecting the model’s predictions. The biases in dense_21 and dense_23 are centered around zero, with a slight spread towards positive values, introducing a small positive shift in the activations of the next layer.
+The biases in \texttt{dense\_20} and \texttt{dense\_22} introduce a slight positive bias to the activations in subsequent layers, potentially affecting the model’s predictions. The biases in \texttt{dense\_21} and \texttt{dense\_23} are centered around zero, with a slight spread towards positive values, introducing a small positive shift in the activations of the next layer.
 
 The impact of these biases would depend on the network architecture and data. Overall, the model’s weights and biases suggest that it is learning effectively from the training data.
+
 
 \begin{figure}[H] 
   \centering
@@ -148,3 +184,5 @@ Positive indicators observed from the mlp learning curve includes the steadily i
 The area under the ROC curve (AUC) is approximately 0.91, indicating strong model performance. The ROC curve illustrates the True Positive Rate (TPR) against the False Positive Rate (FPR) at different classification thresholds. The AUC signifies the probability of the model ranking a randomly selected positive instance (LOS) higher than a randomly selected negative instance (NLOS) across all thresholds, with 1 indicating perfect performance and 0.5 indicating chance performance.
 
 The model's AUC of 0.91 suggests that the MLP model effectively distinguishes between NLOS and LOS signals, with a high likelihood of ranking true LOS signals higher than non-LOS signals and overall, this means that the MLP model is a strong classifier for NLOS/LOS signals.
+
+\subsection{Multilayer Perceptron}\label{mlp_visual}

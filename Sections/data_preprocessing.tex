@@ -154,6 +154,38 @@ This function takes circular (shifted) impulse response (CIR) values as input an
 
 A visualization depicting the frequency graph of the wavelet-transformed Line-of-Sight (LOS) and Non-Line-of-Sight (NLOS) signals is presented in Section \ref{frequency_graph_lr}. Notably, Figure \ref{fig:frequency_graph_lr} exhibits an almost linear trend across the graph, suggesting a potential misapplication of the underlying function. Conversely, Figure \ref{fig:frequency_graph_lr_scaled} portrays a cleaned and scaled rendition of the frequency graph. Despite its improved clarity, this visualization was omitted from the Data Mining phase due to its notably low variance, as evidenced by both figures.
 
+\subsubsection{Discrete Fourier Transform (DFT) in Machine Learning for Signal Processing}
+
+The Discrete Fourier Transform (DFT) serves as a pivotal tool in machine learning projects aimed at signal processing, particularly in predicting the presence of Non-Line-of-Sight (NLOS) or Line-of-Sight (LOS) conditions from a dataset. In this context, the DFT aids in analyzing the frequency characteristics of signals transmitted over wireless channels, offering crucial insights into channel behavior. Inspired by \cite{8682194}, we wanted to perform DFT, followed by training a CNN and MLP model in hopes of a better accuracy, after performing training on the wavelet-transformed CIR data.
+
+\begin{itemize}
+    \item \textbf{Data Extraction:} Initially, the dataset containing Channel Impulse Response (CIR) values is processed. CIR values, representing the response of the wireless channel to an impulse signal, are extracted from the dataset. These values serve as the input for subsequent DFT computations.
+    
+    \item \textbf{DFT Computation:} The DFT is computed on the extracted CIR sequence utilizing the \texttt{numpy.fft.fft} function. Specifically, the DFT calculation is executed along the second axis (columns) of the data array, ensuring that frequency analysis is performed accurately.
+    
+    \item \textbf{Magnitude Spectrum Calculation:} As the DFT output comprises complex numbers, the next step involves computing the absolute values to derive the magnitude spectrum. This spectrum encapsulates the strengths of various frequency components present within the signal, facilitating a comprehensive understanding of its frequency characteristics.
+    
+    \item \textbf{Output Generation:} Finally, the function yields the absolute values (magnitude spectrum) of the DFT, which encapsulate vital information regarding the frequency composition of the input signal.
+\end{itemize}
+
+The mathematical representation of the DFT underscores its significance in signal analysis:
+
+\begin{equation}
+X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j(2\pi/N)kn}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $X[k]$: Represents the $k$-th element of the DFT output sequence.
+    \item $x[n]$: Denotes the $n$-th element of the input CIR sequence.
+    \item $N$: Signifies the total number of elements (length) in the CIR sequence.
+    \item $j$: Represents the imaginary unit.
+\end{itemize}
+
+By leveraging the DFT within machine learning frameworks, we can discern crucial patterns in wireless channel behavior, aiding in the prediction of NLOS or LOS conditions. These insights are invaluable for optimizing communication systems and mitigating the effects of multipath propagation, where signals traverse multiple paths, introducing delays and potential signal degradation.
+
+A visualization of the CIR values after DFT is shown in Figure \ref{fig:frequency_graph_dft}.
+
 \subsection{Summary and Justifications}
 
 In the model training process, certain features were selected while others were omitted based on their relevance and potential impact on model performance. Specifically, features such as RX Level, First Path Power Level, and Signal to Noise Ratio were deemed significant and thus retained for inclusion in the model training dataset. Conversely, features such as Channel ('CH') and Bitrate ('BITRATE') were excluded due to possessing only a single unique value, rendering them incapable of providing meaningful information for model learning and inference.
