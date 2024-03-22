@@ -31,7 +31,9 @@
 \usepackage{enumitem}
 \usepackage{hyperref}
 \usepackage{import}
+
 \usepackage[toc]{glossaries}
+\usepackage[automake]{glossaries-extra}
 
 %----------------------------------------------------------------------------------------
 %	REPORT INFORMATION
@@ -50,6 +52,8 @@
 \date{\today} % Date of the report
 
 \makeglossaries
+\input{Sections/glossary.tex}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -85,11 +89,7 @@
 %\pagebreak
 \import{Sections/}{data_visualisation.tex}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Glossary
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\pagebreak
-\printglossary
+
 
 % Might have use? %
 
@@ -218,5 +218,19 @@
 \printbibliography % Output the bibliography
 
 %----------------------------------------------------------------------------------------
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Glossary
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagebreak
+
+\printglossary
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Contributions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\pagebreak
+\import{Sections/}{contributions.tex}
+
 
 \end{document}

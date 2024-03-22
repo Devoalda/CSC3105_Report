@@ -31,13 +31,13 @@ This section encompasses the graphical representation of data features and model
 \end{figure}
 
 
-Upon examining both LOS and NLOS CIR plots, several key observations emerge. Firstly, both plots display a prominent initial signal followed by a gradual decay over time. However, notable differences exist between the two scenarios. The LOS channel exhibits a stronger initial magnitude and a steeper decay compared to the NLOS channel, suggesting less signal distortion in the LOS scenario.
+Upon examining both LOS and NLOS \gls{cir} plots, several key observations emerge. Firstly, both plots display a prominent initial signal followed by a gradual decay over time. However, notable differences exist between the two scenarios. The LOS channel exhibits a stronger initial magnitude and a steeper decay compared to the NLOS channel, suggesting less signal distortion in the LOS scenario.
 
-These observations have profound implications for machine learning models, particularly Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). While CIR data can serve as valuable input features for tasks like channel estimation or signal classification, raw CIR data may not be optimal for these models due to its complex nature.
+These observations have profound implications for machine learning models, particularly Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). While \gls{cir} data can serve as valuable input features for tasks like channel estimation or signal classification, raw \gls{cir} data may not be optimal for these models due to its complex nature.
 
-To address this challenge, various data transformation techniques can be employed. The Discrete Fourier Transform (DFT) offers a method to convert CIR data into the frequency domain, enabling focused analysis on specific frequency bands relevant to the machine learning model. Additionally, the Wavelet Transform allows for comprehensive analysis of both time and frequency information embedded in the CIR data, potentially enhancing the model's understanding.
+To address this challenge, various data transformation techniques can be employed. The Discrete Fourier Transform (DFT) offers a method to convert \gls{cir} data into the frequency domain, enabling focused analysis on specific frequency bands relevant to the machine learning model. Additionally, the Wavelet Transform allows for comprehensive analysis of both time and frequency information embedded in the \gls{cir} data, potentially enhancing the model's understanding.
 
-Moreover, techniques like Lucy-Richardson Deconvolution can be utilized to mitigate channel distortion in the CIR data, resulting in cleaner signals for the model to learn from. By integrating these data transformation techniques into the preprocessing stage, the effectiveness of CNNs and MLPs for tasks involving channel characterization can be significantly enhanced, ultimately leading to more robust and accurate communication systems.
+Moreover, techniques like Lucy-Richardson Deconvolution can be utilized to mitigate channel distortion in the \gls{cir} data, resulting in cleaner signals for the model to learn from. By integrating these data transformation techniques into the preprocessing stage, the effectiveness of CNNs and MLPs for tasks involving channel characterization can be significantly enhanced, ultimately leading to more robust and accurate communication systems.
 
 
 
@@ -50,13 +50,13 @@ Moreover, techniques like Lucy-Richardson Deconvolution can be utilized to mitig
   \caption{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{fig:frequency_graph_wavelet}
 \end{figure}
 
-A comparison between the original and denoised NLOS Channel Impulse Response (CIR) graphs reveals distinct differences. The original NLOS graph exhibits notable noise, characterized by fluctuations in magnitude, which can potentially obscure the underlying signal. In contrast, the denoised NLOS graph, resulting from successful wavelet denoising, presents a smoother profile, effectively removing noise while preserving the essential features of the signal.
+A comparison between the original and denoised NLOS Channel Impulse Response (\gls{cir}) graphs reveals distinct differences. The original NLOS graph exhibits notable noise, characterized by fluctuations in magnitude, which can potentially obscure the underlying signal. In contrast, the denoised NLOS graph, resulting from successful wavelet denoising, presents a smoother profile, effectively removing noise while preserving the essential features of the signal.
 
-Both the original and denoised LOS and NLOS CIR graphs demonstrate suitability for training Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). However, to enhance model performance, data pre-processing is recommended. 
+Both the original and denoised LOS and NLOS \gls{cir} graphs demonstrate suitability for training Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). However, to enhance model performance, data pre-processing is recommended. 
 
-Raw Channel Impulse Response (CIR) data may not be optimal for CNNs and MLPs due to its inherent complexity. Employing data transformation techniques such as the Discrete Fourier Transform (DFT) and Wavelet Transform can address this issue. The DFT allows focusing on specific frequency bands of interest, while the Wavelet Transform offers a more comprehensive time-frequency representation. Even denoised data can benefit from these transformations, potentially improving model performance significantly.
+Raw Channel Impulse Response (\gls{cir}) data may not be optimal for CNNs and MLPs due to its inherent complexity. Employing data transformation techniques such as the Discrete Fourier Transform (DFT) and Wavelet Transform can address this issue. The DFT allows focusing on specific frequency bands of interest, while the Wavelet Transform offers a more comprehensive time-frequency representation. Even denoised data can benefit from these transformations, potentially improving model performance significantly.
 
-By integrating these pre-processing techniques into the workflow and transforming the CIR data (whether original or denoised) before training, CNNs and MLPs can effectively tackle tasks like channel estimation or signal classification, contributing to the development of robust communication systems.
+By integrating these pre-processing techniques into the workflow and transforming the \gls{cir} data (whether original or denoised) before training, CNNs and MLPs can effectively tackle tasks like channel estimation or signal classification, contributing to the development of robust communication systems.
 
 \subsubsection{Frequency Graph of Lucy-Richardson Transformation LOS and NLOS}\label{frequency_graph_lr}
 
@@ -74,11 +74,19 @@ By integrating these pre-processing techniques into the workflow and transformin
   \caption{Frequency Graph of Lucy-Richardson(scaled) LOS and NLOS}\label{fig:frequency_graph_lr_scaled}
 \end{figure}
 
+When examining the provided Figure \ref{fig:frequency_graph} depicting original and Lucy-Richardson denoised signals for LOS and NLOS propagation scenarios, it is evident that the choice between using original or processed data significantly impacts the feature extraction process for machine learning models such as CNNs and MLPs. The original datasets retain a high degree of raw signal integrity, including environmental noise, which can be instrumental in developing a model that is robust against the imperfect conditions typical of real-world signal reception. The presence of noise, however, introduces the risk of overfitting, as the model may inadvertently learn noise patterns rather than the underlying signal structure, complicating the task of differentiating between LOS and NLOS signals.
+
+The denoised versions, refined using the Lucy-Richardson algorithm, aim to eliminate noise, potentially bringing to light fundamental signal features that would otherwise be masked. This can be especially beneficial for CNNs, which rely on discerning spatial hierarchies within data; denoising may enhance the model's ability to learn relevant patterns through its convolutional layers. Yet, the process of denoising is not without its pitfalls. There is a risk of distorting the true signal, especially if denoising diminishes the nuanced characteristics that are essential for distinguishing LOS from NLOS paths. Moreover, an over-smoothed signal could eliminate essential features indicative of complex propagation phenomena such as multipath fading, thus misguiding the classification process.
+
+Furthermore, while a denoised signal can streamline the training process by reducing feature complexity, it might also remove critical temporal information or create non-existent patterns. These artifacts could foster a misplaced confidence in the model, deteriorating its ability to generalize to new data.
+
+The examination of the images suggests that the denoising procedure, while helpful in reducing noise, could potentially oversimplify the signal. This simplification may lead to a loss of critical information necessary for accurate LOS and NLOS classification. Therefore, the decision to employ denoised data should be made cautiously. It is crucial to conduct empirical trials using both the unaltered and denoised datasets to determine the best approach for a particular model and task. This strategy allows for the comparison of model performance and the selection of the dataset variant that leads to superior results, ensuring that the model trained is both accurate and reliable in classifying LOS and NLOS signals.
+
 \begin{figure}[H] 
   \centering
   \includegraphics[width=1\textwidth]{preprocessing/DFT_LOS.jpg}
   \includegraphics[width=1\textwidth]{preprocessing/DFT_NLOS.jpg}
-  \caption{Frequency Graph of Discrete Fourier Transformed CIR values (LOS and NLOS)}\label{fig:frequency_graph_dft}
+  \caption{Frequency Graph of Discrete Fourier Transformed \gls{cir} values (LOS and NLOS)}\label{fig:frequency_graph_dft}
 \end{figure}
 
 \subsubsection{Signal to Noise Ratio}\label{snr_visual}
@@ -120,7 +128,7 @@ By integrating these pre-processing techniques into the workflow and transformin
   \caption{CNN ROC Curve Evaluation}\label{fig:cnn_roc_curve}
 \end{figure}
 
-\subsection{Convolution Neural Network With DFT CIR Data}\label{cnn_visual_dft}
+\subsection{Convolution Neural Network With DFT \gls{cir} Data}\label{cnn_visual_dft}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MLP Visualisation
@@ -184,8 +192,8 @@ Positive indicators observed from the mlp learning curve includes the steadily i
 The area under the ROC curve (AUC) is approximately 0.91, indicating strong model performance. The ROC curve illustrates the True Positive Rate (TPR) against the False Positive Rate (FPR) at different classification thresholds. The AUC signifies the probability of the model ranking a randomly selected positive instance (LOS) higher than a randomly selected negative instance (NLOS) across all thresholds, with 1 indicating perfect performance and 0.5 indicating chance performance.
 
 The model's AUC of 0.91 suggests that the MLP model effectively distinguishes between NLOS and LOS signals, with a high likelihood of ranking true LOS signals higher than non-LOS signals and overall, this means that the MLP model is a strong classifier for NLOS/LOS signals.
-% TODO %
-\subsection{Multilayer Perceptron With DFT CIR Data}\label{mlp_visual_dft}
+% TODO jovian send help plox copy all 4 image into gpt4 %
+\subsection{Multilayer Perceptron With DFT \gls{cir} Data}\label{mlp_visual_dft}
 
 \begin{figure}[H] 
   \centering
