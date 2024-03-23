@@ -12,7 +12,7 @@ In this section, various data mining techniques are employed to extract meaningf
 
 
 
-In our study, we opted for Convolutional Neural Network (\gls{cnn}) and Multilayer Perceptron (\gls{mlp}) models as our primary machine learning approaches, drawing upon their inherent capabilities in feature extraction and representation, as suggested by \cite{jiang_uwb_2020}. To ensure robust model evaluation, the dataset is partitioned into training and testing sets following an 80:20 ratio, facilitating comprehensive assessment while maintaining data representativeness.
+In our study, we opted for Convolutional Neural Network (\acrshort{cnn}) and Multilayer Perceptron (\acrshort{mlp}) models as our primary machine learning approaches, drawing upon their inherent capabilities in feature extraction and representation, as suggested by \cite{jiang_uwb_2020}. To ensure robust model evaluation, the dataset is partitioned into training and testing sets following an 80:20 ratio, facilitating comprehensive assessment while maintaining data representativeness.
 
 Prior to model training, a crucial preprocessing step involves feature scaling using a StandardScaler object. This process normalizes the features, ensuring they exhibit zero mean and unit variance. By standardizing the feature values, the optimization algorithm's convergence is enhanced, enabling more effective training and optimization processes. This preprocessing step plays a vital role in preparing the data for model training, ultimately contributing to the models' performance and generalization capability.
 
@@ -22,14 +22,14 @@ Prior to model training, a crucial preprocessing step involves feature scaling u
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Convolution Neural Network (\gls{cnn})}\label{cnn}
+\subsection{\Gls{Convolutional Neural Network}}\label{cnn}
 
-Convolutional Neural Networks (\gls{cnn}s) are a powerful class of deep learning models that have achieved remarkable success in various image recognition and signal processing tasks. Their ability to automatically learn spatial features from the input data makes them particularly well-suited for analyzing sequential data like UWB \gls{cir} signals. In this work, a CNN is employed to classify the received UWB signals based on the location information they contain.
+\Gls{Convolutional Neural Network} are a powerful class of deep learning models that have achieved remarkable success in various image recognition and signal processing tasks. Their ability to automatically learn spatial features from the input data makes them particularly well-suited for analyzing sequential data like UWB \acrshort{cir} signals. In this work, a \acrshort{cnn} is employed to classify the received UWB signals based on the location information they contain.
 
 
 \subsection{Model Architecture}
 
-The convolutional neural network (\gls{cnn}) model architecture is structured to effectively extract and process features from the input data. It comprises several layers designed for specific tasks.
+The convolutional neural network (\acrshort{cnn}) model architecture is structured to effectively extract and process features from the input data. It comprises several layers designed for specific tasks.
 
 \subsubsection{Conv1D Layers}
 
@@ -98,20 +98,20 @@ where:
   \item $\tau$ is the integration variable
 \end{itemize}
 
-In the context of CNNs, the integral is replaced by a summation over the discrete spatial dimensions (width in the case of Conv1D layers) of the input data and the kernel. The convolution operation essentially computes the dot product between the filter and the input data at each position, capturing the presence and strength of the specific feature the filter is designed to detect.
+In the context of \acrshort{cnn}s, the integral is replaced by a summation over the discrete spatial dimensions (width in the case of Conv1D layers) of the input data and the kernel. The convolution operation essentially computes the dot product between the filter and the input data at each position, capturing the presence and strength of the specific feature the filter is designed to detect.
 
 
-\subsubsection{CNN Model Performance}
+\subsubsection{\acrshort{cnn} Model Performance}
 
-This section provides a summary of the Convolutional Neural Network (\gls{cnn}) model's performance in signal classification.
+This section provides a summary of the Convolutional Neural Network (\acrshort{cnn}) model's performance in signal classification.
 
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{cnn/Cnn_Accuracy.png}
-	\caption{CNN Training and Testing Accuracy Plot}\label{cnn_accuracy}
+	\caption{CNN Training and Testing Accuracy Plot}\label{fig:cnn_accuracy}
 \end{figure}
 
-The model's performance is depicted in Figure \ref{cnn_accuracy}, which illustrates the training and testing accuracy throughout the training process. The CNN achieved a test accuracy of 86.29\%, indicating reasonable generalizability to unseen data. However, the test loss remained at 0.399, suggesting there is still potential for further error reduction. 
+The model's performance is depicted in Figure \ref{fig:cnn_accuracy}, which illustrates the training and testing accuracy throughout the training process. The CNN achieved a test accuracy of 86.29\%, indicating reasonable generalizability to unseen data. However, the test loss remained at 0.399, suggesting there is still potential for further error reduction. 
 
 \begin{figure}[H] 
 	\centering
@@ -125,16 +125,31 @@ The report evaluates the model's ability to distinguish between NLOS (Class 0) a
 
 The overall accuracy of the model is 0.8646, indicating that it correctly classifies around 86\% of instances across both classes. However, it's essential to interpret this accuracy in the context of class imbalance and the relative importance of precision and recall. While the model demonstrates strengths in precision for both classes, the lower recall for the LOS class suggests potential false negatives for LOS. Further analysis considering these factors can provide deeper insights into the model's performance.
 
-In summary, the \gls{cnn} model shows promising performance for signal classification tasks, with notable strengths in precision. However, there are areas for improvement, particularly in enhancing the recall for LOS instances. Considering class imbalance and the relative importance of precision and recall can offer valuable insights for refining the model's performance in binary classification tasks.
+In summary, the \acrshort{cnn} model shows promising performance for signal classification tasks, with notable strengths in precision. However, there are areas for improvement, particularly in enhancing the recall for LOS instances. Considering class imbalance and the relative importance of precision and recall can offer valuable insights for refining the model's performance in binary classification tasks.
 
-\subsubsection{CNN Model Performance (DFT-Transformed \gls{cir} Dataset)}
+\subsubsection{CNN Model Performance (DFT-Transformed \acrshort{cir} Dataset)}
 
-% Ben ben ? %
+This section presents an overview of the Convolutional Neural Network (\acrshort{cnn}) model's performance in signal classification following Discrete Fourier Transform (DFT) preprocessing.
 
+\begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.50\textwidth]{cnn/DFT/Cnn_Accuracy.png}
+    \caption{Training and Test Accuracy Plot for CNN with DFT}\label{fig:cnn_accuracy_DFT}
+\end{figure}
+
+The accuracy plot for both training and testing phases, as depicted in Figure \ref{fig:cnn_accuracy_DFT}, closely resembles the one illustrated in Figure \ref{fig:cnn_accuracy}, reflecting consistent performance across the same model architecture. However, employing DFT results in a notable improvement in overall accuracy.
+
+\begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.50\textwidth]{cnn/DFT/Cnn_Accuracy.png}
+    \caption{CNN Classification Report with DFT}\label{fig:cnn_classification_report_DFT}
+\end{figure}
+
+Similarly, the classification report, showcased in Figure \ref{fig:cnn_classification_report_DFT}, underscores enhanced accuracy compared to the dataset transformed using Wavelet Transforms. These visualizations offer insights into how preprocessing techniques influence model outcomes. Unlike Wavelet Transform, which alters feature variance, DFT primarily captures correlations between features, akin to the feature reduction process facilitated by Principal Component Analysis (PCA). Consequently, leveraging DFT leads to a higher final accuracy for CNN models, given their proficiency in handling raw data.
 
 \subsubsection{Possible Improvements}
 
-To enhance the performance of the \gls{mlp} model, several avenues for improvement can be explored. Firstly, employing hyperparameter tuning techniques such as grid search or random search could optimize parameters like the learning rate, number of filters, or dropout rates. By fine-tuning these parameters, the model's learning capability and overall performance could be significantly improved. Additionally, introducing regularization methods, such as L1 or L2 regularization, could mitigate overfitting and enhance the model's generalization ability. By penalizing large parameter values, regularization techniques help prevent the model from fitting noise in the training data, thus improving its ability to generalize to unseen data. Furthermore, if applicable, incorporating data augmentation methods could be beneficial. By artificially expanding the training dataset through techniques like rotation, scaling, or flipping, data augmentation can help the model learn more robust features, consequently improving its performance on unseen data. By exploring these avenues for improvement, the CNN model's effectiveness in signal classification tasks can be further refined and optimized.
+To enhance the performance of the \acrshort{mlp} model, several avenues for improvement can be explored. Firstly, employing hyperparameter tuning techniques such as grid search or random search could optimize parameters like the learning rate, number of filters, or dropout rates. By fine-tuning these parameters, the model's learning capability and overall performance could be significantly improved. Additionally, introducing regularization methods, such as L1 or L2 regularization, could mitigate overfitting and enhance the model's generalization ability. By penalizing large parameter values, regularization techniques help prevent the model from fitting noise in the training data, thus improving its ability to generalize to unseen data. Furthermore, if applicable, incorporating data augmentation methods could be beneficial. By artificially expanding the training dataset through techniques like rotation, scaling, or flipping, data augmentation can help the model learn more robust features, consequently improving its performance on unseen data. By exploring these avenues for improvement, the CNN model's effectiveness in signal classification tasks can be further refined and optimized.
 
 \subsubsection{Conclusion}
 
@@ -147,8 +162,8 @@ In conclusion, the CNN model presents a promising foundation for Ultra-Wideband 
 % MLP 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Multilayer Perceptron (\gls{mlp})}\label{mlp}                                                                                 
-The Multilayer Perceptron (\gls{mlp}) model is a class of feedforward artificial neural network that consists of at least three layers of nodes: an input layer, a hidden layer, and an output layer. MLPs are known for their ability to handle complex, non-linear relationships within the dataset, making them suitable for a wide range of classification tasks. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
+\subsection{\Gls{Multilayer Perceptron}}\label{mlp}                                                                                 
+The Multilayer Perceptron (\acrshort{mlp}) model is a class of feedforward artificial neural network that consists of at least three layers of nodes: an input layer, a hidden layer, and an output layer. MLPs are known for their ability to handle complex, non-linear relationships within the dataset, making them suitable for a wide range of classification tasks. Unlike simpler models, MLPs boast a layered structure with each layer fully connected to the next. This intricate architecture empowers them to unearth intricate patterns in the data and translate those patterns into accurate predictions. This capability is particularly valuable for NLOS/LOS classification, where signal characteristics can exhibit significant variations due to environmental factors.
 
 \subsection{Model Architecture}
 
@@ -244,7 +259,7 @@ The Multilayer Perceptron (MLP) model achieved a test accuracy of 84.61\% with a
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % For New Dataset
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{MLP Model Performance (DFT-Transformed \gls{cir} Dataset)}
+\subsubsection{\acrshort{mlp} Model Performance (DFT-Transformed \acrshort{cir} Dataset)}
 
 This section provides a summary of the Multilayer Perceptron (MLP) model's performance in signal classification after performing DFT.
 
@@ -255,33 +270,33 @@ This section provides a summary of the Multilayer Perceptron (MLP) model's perfo
 	\caption{MLP Training and Test Accuracy Plot DFT}\label{fig:Mlp_training_and_accuracy_plot_DFT}
 \end{figure}
 
-The MLP model achieved increasing training accuracy over 20 epochs, suggesting it learned patterns in the NLOS/LOS data. However, the test accuracy remained consistently higher, which could indicate possible overfitting or a potentially simpler test set.
+The \acrshort{mlp} model achieved increasing training accuracy over 20 epochs, suggesting it learned patterns in the NLOS/LOS data. However, the test accuracy remained consistently higher, which could indicate possible overfitting or a potentially simpler test set.
 
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{mlp/Mlp_training_and_validation_loss_plot_DFT}
-	\caption{MLP Training and Validation Loss Plot DFT}\label{fig:Mlp_training_and_validation_loss_plot_DFT}
+	\caption{\acrshort{mlp} Training and Validation Loss Plot DFT}\label{fig:Mlp_training_and_validation_loss_plot_DFT}
 \end{figure}
 
-The MLP model's training and validation loss curves show a steady decrease over epochs, indicating successful learning of NLOS/LOS data patterns. The validation loss curve remains slightly higher than the training loss curve, suggesting good generalization and avoiding overfitting to the training data. This implies the model is effectively reducing loss (improving performance) on both the training and unseen validation data.
+The \acrshort{mlp} model's training and validation loss curves show a steady decrease over epochs, indicating successful learning of NLOS/LOS data patterns. The validation loss curve remains slightly higher than the training loss curve, suggesting good generalization and avoiding overfitting to the training data. This implies the model is effectively reducing loss (improving performance) on both the training and unseen validation data.
 
 \begin{figure}[H] 
 	\centering
 	\includegraphics[width=0.50\textwidth]{mlp/Mlp_classification_report_DFT}
-	\caption{Mlp Classification Report DFT}\label{fig:Mlp_classification_report_DFT}
+	\caption{\acrshort{mlp} Classification Report DFT}\label{fig:Mlp_classification_report_DFT}
 \end{figure}
 
-The MLP model achieved a promising 87\% accuracy on unseen data for NLOS/LOS classification. Precision (around 90\%) and F1-scores (around 87\%) were well-balanced across both classes, indicating good overall performance. The model is more likely to miss LOS signals compared to NLOS signals (82\% recall for LOS vs 93\% for NLOS), suggesting potential for improvement in handling LOS signal variations. Despite a test loss of 0.375, the model shows promise for NLOS/LOS classification, with further exploration possible to enhance its ability to classify diverse LOS signals.
+The \acrshort{mlp} model achieved a promising 87\% accuracy on unseen data for NLOS/LOS classification. Precision (around 90\%) and F1-scores (around 87\%) were well-balanced across both classes, indicating good overall performance. The model is more likely to miss LOS signals compared to NLOS signals (82\% recall for LOS vs 93\% for NLOS), suggesting potential for improvement in handling LOS signal variations. Despite a test loss of 0.375, the model shows promise for NLOS/LOS classification, with further exploration possible to enhance its ability to classify diverse LOS signals.
 
 \subsubsection{Possible Improvements}
 
-Possible improvements for the Multilayer Perceptron (MLP) model could include hyperparameter tuning, where experimenting with different hyperparameters like the number of units in Dense layers, the dropout rate, and the learning rate of the optimizer could lead to enhanced performance. Techniques such as grid search or random search can efficiently explore the hyperparameter space. Additionally, exploring more complex MLP architectures, such as adding layers or using different activation functions, may improve the model's ability to learn intricate patterns. Other regularization techniques like L1 regularization or different dropout rates could further prevent overfitting. Data augmentation methods can also be applied to increase the dataset size, potentially improving generalization. Ensemble methods, including combining MLP with other models or using bagging/boosting, could reduce variance and improve generalization. Lastly, feature engineering to identify and incorporate relevant features could enhance the model's performance by capturing underlying data patterns more effectively.
+Possible improvements for the Multilayer Perceptron (MLP) model could include hyperparameter tuning, where experimenting with different hyperparameters like the number of units in Dense layers, the dropout rate, and the learning rate of the optimizer could lead to enhanced performance. Techniques such as grid search or random search can efficiently explore the hyperparameter space. Additionally, exploring more complex \acrshort{mlp} architectures, such as adding layers or using different activation functions, may improve the model's ability to learn intricate patterns. Other regularization techniques like L1 regularization or different dropout rates could further prevent overfitting. Data augmentation methods can also be applied to increase the dataset size, potentially improving generalization. Ensemble methods, including combining \acrshort{mlp} with other models or using bagging/boosting, could reduce variance and improve generalization. Lastly, feature engineering to identify and incorporate relevant features could enhance the model's performance by capturing underlying data patterns more effectively.
 
 \subsubsection{Conclusion}
 
 In conclusion, the Multilayer Perceptron (MLP) model trained for Non-Line-of-Sight (NLOS) and Line-of-Sight (LOS) classification shows strong performance, achieving an accuracy of approximately 85\%. The model demonstrates good precision and recall for both classes, indicating its effectiveness in classifying NLOS and LOS instances. However, there is room for improvement, particularly in reducing the observed gap between training and test accuracy to mitigate potential overfitting.
 
-\subsection{Comparison Between CNN and MLP}\label{cnn_vs_mlp}
+\subsection{Comparison Between CNN and \acrshort{mlp}}\label{cnn_vs_mlp}
 
 % Decide whether are you using supervised or unsupervised learning? What algorithm should be preferred for your team? %
 % Decide the split ratio of the training/test dataset such as 70:30 or 80:20? %
@@ -290,11 +305,11 @@ In conclusion, the Multilayer Perceptron (MLP) model trained for Non-Line-of-Sig
 % GPT4 plox @jovian%
 Convolutional Neural Networks (CNNs) offer several advantages for classifying NLOS and LOS signals in UWB communication. One key advantage is their ability to automatically learn hierarchical features from the input data through convolutional and pooling layers. This feature extraction process is particularly effective for capturing complex spatial patterns in the signal data, which can be crucial for distinguishing between NLOS and LOS scenarios. Additionally, CNNs are adept at handling high-dimensional data, such as images or multi-dimensional signal data, making them well-suited for UWB signal classification tasks where the input data may have complex spatial relationships.
 
-However, CNNs also have some limitations. They can be computationally expensive, especially when dealing with large datasets or complex network architectures. Training CNNs may require a significant amount of computational resources and time, which can be a practical limitation in some scenarios. Additionally, CNNs may be more challenging to interpret compared to simpler models like MLPs, making it harder to understand the underlying reasons for the model's predictions.
+However, CNNs also have some limitations. They can be computationally expensive, especially when dealing with large datasets or complex network architectures. Training CNNs may require a significant amount of computational resources and time, which can be a practical limitation in some scenarios. Additionally, CNNs may be more challenging to interpret compared to simpler models like \acrshort{mlp}s, making it harder to understand the underlying reasons for the model's predictions.
 
-On the other hand, Multilayer Perceptrons (MLPs) have their own set of advantages and disadvantages for UWB signal classification. MLPs are relatively simpler in architecture compared to CNNs, making them easier to train and interpret. This simplicity can be advantageous in scenarios where the signal data does not have strong spatial dependencies or when computational resources are limited. MLPs are also known for their ability to learn complex relationships in data, which can be beneficial for capturing the nuances of NLOS and LOS signal characteristics.
+On the other hand, Multilayer Perceptrons (\acrshort{mlp}s) have their own set of advantages and disadvantages for UWB signal classification. \acrshort{mlp}s are relatively simpler in architecture compared to CNNs, making them easier to train and interpret. This simplicity can be advantageous in scenarios where the signal data does not have strong spatial dependencies or when computational resources are limited. \acrshort{mlp}s are also known for their ability to learn complex relationships in data, which can be beneficial for capturing the nuances of NLOS and LOS signal characteristics.
 
-However, MLPs may struggle with capturing spatial patterns in the signal data, especially if the data has strong spatial dependencies. Unlike CNNs, which are specifically designed for tasks involving spatial data, MLPs may not be as effective at extracting spatial features from the input data. Additionally, MLPs can be prone to overfitting, especially when dealing with high-dimensional data or complex patterns. Regularization techniques, such as dropout or L2 regularization, may be necessary to prevent overfitting in MLPs.
+However, \acrshort{mlp}s may struggle with capturing spatial patterns in the signal data, especially if the data has strong spatial dependencies. Unlike CNNs, which are specifically designed for tasks involving spatial data, \acrshort{mlp}s may not be as effective at extracting spatial features from the input data. Additionally, \acrshort{mlp}s can be prone to overfitting, especially when dealing with high-dimensional data or complex patterns. Regularization techniques, such as dropout or L2 regularization, may be necessary to prevent overfitting in \acrshort{mlp}s.
 
 % \subsection{Supervised Machine Learning Algorithms}\label{sml}
 

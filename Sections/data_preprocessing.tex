@@ -17,11 +17,11 @@ No Features were extracted during preprocessing stage due to nature of the model
 
 \subsection{Feature Derivation}\label{feature_derivation}
 
-This section delineates the derivation of essential features from the Decawave Ultra-Wideband (UWB) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models. Most of the features were derived from the formula provided in \cite{DecawaveDW1000}.
+This section delineates the derivation of essential features from the Decawave Ultra-Wideband (\acrshort{uwb}) Module datasheet, crucial for subsequent analysis. These derived features were used in the data mining phase to train the machine learning models. Most of the features were derived from the formula provided in \cite{DecawaveDW1000}.
 
 \subsubsection{First Path Power Level}\label{first_path_power_level}
 
-The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (\gls{cir}). It is calculated using the following equation:
+The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (\acrshort{cir}). It is calculated using the following equation:
 
 \begin{equation}
   \text{First Path Power Level} = 10 \cdot \log_{10} \left( \frac{F_1^2 + F_2^2 + F_3^2}{N^2} \right) - A
@@ -30,7 +30,7 @@ The First Path Power Level represents the strength of the primary signal path in
 where:
 
 \begin{itemize}
-  \item $F_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the \gls{cir} ($i = 1, 2, 3$)
+  \item $F_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the \acrshort{cir} ($i = 1, 2, 3$)
   \item $N$ (Current variable name: $RXPACC$): Receiver path accumulation length
   \item $A$ (Current variable name: $PRFR$):Pulse Repetition Frequncy Rate (typically 64)
 \end{itemize}
@@ -150,47 +150,47 @@ def deconvolve_cir(cir_values, psf=None, iterations=50):
     return deconvolved_cir
 \end{verbatim}
 
-This function takes circular (shifted) impulse response (\gls{cir}) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved \gls{cir}.
+This function takes circular (shifted) impulse response (\acrshort{cir}) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved \acrshort{cir}.
 
-A visualization depicting the frequency graph of the wavelet-transformed Line-of-Sight (LOS) and Non-Line-of-Sight (NLOS) signals is presented in Section \ref{frequency_graph_lr}. Notably, Figure \ref{fig:frequency_graph_lr} exhibits an almost linear trend across the graph, suggesting a potential misapplication of the underlying function. Conversely, Figure \ref{fig:frequency_graph_lr_scaled} portrays a cleaned and scaled rendition of the frequency graph. Despite its improved clarity, this visualization was omitted from the Data Mining phase due to its notably low variance, as evidenced by both figures.
+A visualization depicting the frequency graph of the wavelet-transformed \acrshort{los} and \acrshort{nlos} signals is presented in Section \ref{frequency_graph_lr}. Notably, Figure \ref{fig:frequency_graph_lr} exhibits an almost linear trend across the graph, suggesting a potential misapplication of the underlying function. Conversely, Figure \ref{fig:frequency_graph_lr_scaled} portrays a cleaned and scaled rendition of the frequency graph. Despite its improved clarity, this visualization was omitted from the Data Mining phase due to its notably low variance, as evidenced by both figures.
 
-\subsubsection{Discrete Fourier Transform (DFT) in Machine Learning for Signal Processing}
+\subsubsection{\Gls{Discrete Fourier Transform} in Machine Learning for Signal Processing}
 
-The Discrete Fourier Transform (DFT) serves as a pivotal tool in machine learning projects aimed at signal processing, particularly in predicting the presence of Non-Line-of-Sight (NLOS) or Line-of-Sight (LOS) conditions from a dataset. In this context, the DFT aids in analyzing the frequency characteristics of signals transmitted over wireless channels, offering crucial insights into channel behavior. Inspired by \cite{8682194}, we wanted to perform DFT, followed by training a CNN and MLP model in hopes of a better accuracy, after performing training on the wavelet-transformed \gls{cir} data.
+The \acrshort{dft} serves as a pivotal tool in machine learning projects aimed at signal processing, particularly in predicting the presence of \acrshort{los} or \acrshort{nlos} conditions from a dataset. In this context, the \acrshort{dft} aids in analyzing the frequency characteristics of signals transmitted over wireless channels, offering crucial insights into channel behavior. Inspired by \cite{8682194}, we wanted to perform \acrshort{dft}, followed by training a \Gls{Convolutional Neural Network} and \Gls{Multilayer Perceptron} model in hopes of a better accuracy, after performing training on the wavelet-transformed \acrshort{cir} data.
 
 \begin{itemize}
-    \item \textbf{Data Extraction:} Initially, the dataset containing Channel Impulse Response (\gls{cir}) values is processed. \gls{cir} values, representing the response of the wireless channel to an impulse signal, are extracted from the dataset. These values serve as the input for subsequent DFT computations.
+    \item \textbf{Data Extraction:} Initially, the dataset containing Channel Impulse Response (\acrshort{cir}) values is processed. \acrshort{cir} values, representing the response of the wireless channel to an impulse signal, are extracted from the dataset. These values serve as the input for subsequent DFT computations.
     
-    \item \textbf{DFT Computation:} The DFT is computed on the extracted \gls{cir} sequence utilizing the \texttt{numpy.fft.fft} function. Specifically, the DFT calculation is executed along the second axis (columns) of the data array, ensuring that frequency analysis is performed accurately.
+    \item \textbf{\acrshort{dft} Computation:} The \acrshort{dft} is computed on the extracted \acrshort{cir} sequence utilizing the \texttt{numpy.fft.fft} (Fast Fourier Transform) function. Specifically, the \acrshort{dft} calculation is executed along the second axis (columns) of the data array, ensuring that frequency analysis is performed accurately.
     
-    \item \textbf{Magnitude Spectrum Calculation:} As the DFT output comprises complex numbers, the next step involves computing the absolute values to derive the magnitude spectrum. This spectrum encapsulates the strengths of various frequency components present within the signal, facilitating a comprehensive understanding of its frequency characteristics.
+    \item \textbf{Magnitude Spectrum Calculation:} As the \acrshort{dft} output comprises complex numbers, the next step involves computing the absolute values to derive the magnitude spectrum. This spectrum encapsulates the strengths of various frequency components present within the signal, facilitating a comprehensive understanding of its frequency characteristics.
     
-    \item \textbf{Output Generation:} Finally, the function yields the absolute values (magnitude spectrum) of the DFT, which encapsulate vital information regarding the frequency composition of the input signal.
+    \item \textbf{Output Generation:} Finally, the function yields the absolute values (magnitude spectrum) of the \acrshort{dft}, which encapsulate vital information regarding the frequency composition of the input signal.
 \end{itemize}
 
-The mathematical representation of the DFT underscores its significance in signal analysis:
+The mathematical representation of the \acrshort{dft} underscores its significance in signal analysis:
 
 \begin{equation}
-X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-j(2\pi/N)kn}
+X[k] = \sum_{n=0}^{N-1} x[n] \cdot e^{-i(2\pi/N)kn}
 \end{equation}
 
 where:
 \begin{itemize}
     \item $X[k]$: Represents the $k$-th element of the DFT output sequence.
-    \item $x[n]$: Denotes the $n$-th element of the input \gls{cir} sequence.
-    \item $N$: Signifies the total number of elements (length) in the \gls{cir} sequence.
-    \item $j$: Represents the imaginary unit.
+    \item $x[n]$: Denotes the $n$-th element of the input \acrshort{cir} sequence.
+    \item $N$: Signifies the total number of elements (length) in the \acrshort{cir} sequence.
+    \item $i$: Represents the imaginary unit.
 \end{itemize}
 
 By leveraging the DFT within machine learning frameworks, we can discern crucial patterns in wireless channel behavior, aiding in the prediction of NLOS or LOS conditions. These insights are invaluable for optimizing communication systems and mitigating the effects of multipath propagation, where signals traverse multiple paths, introducing delays and potential signal degradation.
 
-A visualization of the \gls{cir} values after DFT is shown in Figure \ref{fig:frequency_graph_dft}.
+A visualization of the \acrshort{cir} values after DFT is shown in Section \ref{dft_visual}.
 
 \subsection{Summary and Justifications}
 
 In the model training process, certain features were selected while others were omitted based on their relevance and potential impact on model performance. Specifically, features such as RX Level, First Path Power Level, and Signal to Noise Ratio were deemed significant and thus retained for inclusion in the model training dataset. Conversely, features such as Channel ('CH') and Bitrate ('BITRATE') were excluded due to possessing only a single unique value, rendering them incapable of providing meaningful information for model learning and inference.
 
-Furthermore, the decision was made to replace the \gls{cir} columns ('CIR0 - CIR1015') with their Wavelet-Transformed counterparts, as detailed in Section \ref{wavelet_transformation}. This transformation was chosen to enhance the model's ability to discern salient patterns within the \gls{cir} signals, thereby improving classification accuracy.
+Furthermore, the decision was made to replace the \acrshort{cir} columns ('CIR0 - CIR1015') with their Wavelet-Transformed counterparts, as detailed in Section \ref{wavelet_transformation}. This transformation was chosen to enhance the model's ability to discern salient patterns within the \acrshort{cir} signals, thereby improving classification accuracy.
 
-Regarding the choice not to pre-reduce features before inputting them into the convolutional neural network (CNN), it was reasoned that manually extracting features might overlook crucial information pertinent to the classification task. CNNs are adept at autonomously learning discriminative features directly from raw data during the training phase, a capability that often leads to superior model performance. By allowing the CNN to extract features from the UWB \gls{cir} signals organically, the model can effectively discern the most relevant information for accurate classification, thereby mitigating the risk of feature reduction potentially discarding crucial discriminative features.
+Regarding the choice not to pre-reduce features before inputting them into the \gls{cnn} or \gls{mlp}, it was reasoned that manually extracting features might overlook crucial information pertinent to the classification task. \acrshort{cnn}s are adept at autonomously learning discriminative features directly from raw data during the training phase, a capability that often leads to superior model performance. By allowing the \acrshort{cnn} to extract features from the UWB \acrshort{cir} signals organically, the model can effectively discern the most relevant information for accurate classification, thereby mitigating the risk of feature reduction potentially discarding crucial discriminative features.
 
