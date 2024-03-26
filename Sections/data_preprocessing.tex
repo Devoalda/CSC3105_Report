@@ -76,6 +76,7 @@ where:
 The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
 
 \subsection{Feature Reduction}\label{feature_reduction}
+During the dataset refinement phase, we removed attributes that displayed uniform values for all records. This entailed discarding Channel Information (CH), which was invariably recorded as 2, BITRATE, which consistently maintained a value of 110, Pulse Repetition Frequency Rate (PRFR), perpetually set at 64, and Preamble Length (PREAM\_LEN), uniformly established at 1024.
 
 % Double check ALL formula, maybe cite or something idk
 \subsection{De-Noise Functions}\label{de_noise_Functions}

@@ -6,7 +6,7 @@ In this section, various data mining techniques are employed to extract meaningf
     \item[Convolution Neural Network (CNN):] Detailed exposition of CNN model architecture and corresponding outcomes.
     \item[Multilayer Perceptron (MLP):] Elucidation of MLP model structure and ensuing results.
     \item[Comparison Between CNN and MLP:] Comparative analysis of CNN and MLP, along with justifications for the choice of each.
-    \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
+    % \item[Supervised Machine Learning Algorithms:] Discussion on the non-utilization of supervised algorithms and reasons thereof.
     \item[Unsupervised Machine Learning Algorithms:] Explanation on the preference for CNN and MLP over unsupervised algorithms.
 \end{description}
 
@@ -156,8 +156,6 @@ To enhance the performance of the \acrshort{mlp} model, several avenues for impr
 In conclusion, the CNN model presents a promising foundation for Ultra-Wideband (UWB) Line-of-Sight (LOS) and Non-Line-of-Sight (NLOS) classification. By strategically exploring avenues for improvement such as hyperparameter tuning, regularization, and potentially data augmentation, there is a high likelihood of further enhancing the model's accuracy and generalizability in signal classification tasks.
 
 
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % MLP 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -297,24 +295,23 @@ Possible improvements for the Multilayer Perceptron (MLP) model could include hy
 In conclusion, the Multilayer Perceptron (MLP) model trained for Non-Line-of-Sight (NLOS) and Line-of-Sight (LOS) classification shows strong performance, achieving an accuracy of approximately 85\%. The model demonstrates good precision and recall for both classes, indicating its effectiveness in classifying NLOS and LOS instances. However, there is room for improvement, particularly in reducing the observed gap between training and test accuracy to mitigate potential overfitting.
 
 \subsection{Comparison Between CNN and \acrshort{mlp}}\label{cnn_vs_mlp}
+Convolutional Neural Networks (CNNs) and Multilayer Perceptrons (MLPs) are widely employed for classifying Non-Line-of-Sight (NLOS) and Line-of-Sight (LOS) signals in Ultra-Wideband (UWB) communication.
 
-% Decide whether are you using supervised or unsupervised learning? What algorithm should be preferred for your team? %
-% Decide the split ratio of the training/test dataset such as 70:30 or 80:20? %
-% Determine the classification, regression performance accuracy such as RMSE, confusion matrix etc? %
+% BECAUSE OF THE "C" :)
+CNNs automatically learn hierarchical features through convolutional and pooling layers, facilitating the extraction of complex spatial patterns crucial for distinguishing between NLOS and LOS scenarios. The convolution operation efficiently detects spatial patterns by convolving learnable filters with input data, particularly advantageous for UWB signal classification, where spatial relationships are vital. Moreover, CNNs handle high-dimensional data effectively, making them ideal for tasks with intricate spatial relationships.
 
-% GPT4 plox @jovian%
-Convolutional Neural Networks (CNNs) offer several advantages for classifying NLOS and LOS signals in UWB communication. One key advantage is their ability to automatically learn hierarchical features from the input data through convolutional and pooling layers. This feature extraction process is particularly effective for capturing complex spatial patterns in the signal data, which can be crucial for distinguishing between NLOS and LOS scenarios. Additionally, CNNs are adept at handling high-dimensional data, such as images or multi-dimensional signal data, making them well-suited for UWB signal classification tasks where the input data may have complex spatial relationships.
+However, CNNs can be computationally expensive, especially with large datasets or complex architectures, and may lack transparency in predictions compared to MLPs.
 
-However, CNNs also have some limitations. They can be computationally expensive, especially when dealing with large datasets or complex network architectures. Training CNNs may require a significant amount of computational resources and time, which can be a practical limitation in some scenarios. Additionally, CNNs may be more challenging to interpret compared to simpler models like \acrshort{mlp}s, making it harder to understand the underlying reasons for the model's predictions.
+MLPs, simpler in architecture, are easier to train and interpret, suitable for data lacking strong spatial dependencies or limited computational resources. They are adept at capturing complex relationships in data, beneficial for NLOS and LOS signal classification.
 
-On the other hand, Multilayer Perceptrons (\acrshort{mlp}s) have their own set of advantages and disadvantages for UWB signal classification. \acrshort{mlp}s are relatively simpler in architecture compared to CNNs, making them easier to train and interpret. This simplicity can be advantageous in scenarios where the signal data does not have strong spatial dependencies or when computational resources are limited. \acrshort{mlp}s are also known for their ability to learn complex relationships in data, which can be beneficial for capturing the nuances of NLOS and LOS signal characteristics.
+Yet, MLPs may struggle with spatial feature extraction and are prone to overfitting, necessitating regularization techniques.
 
-However, \acrshort{mlp}s may struggle with capturing spatial patterns in the signal data, especially if the data has strong spatial dependencies. Unlike CNNs, which are specifically designed for tasks involving spatial data, \acrshort{mlp}s may not be as effective at extracting spatial features from the input data. Additionally, \acrshort{mlp}s can be prone to overfitting, especially when dealing with high-dimensional data or complex patterns. Regularization techniques, such as dropout or L2 regularization, may be necessary to prevent overfitting in \acrshort{mlp}s.
+In essence, while both CNNs and MLPs are suitable for signal processing, CNNs, an extension of MLPs with convolution layers, excel in capturing spatial patterns, making them ideal for UWB signal classification.
+
 
 % \subsection{Supervised Machine Learning Algorithms}\label{sml}
 
 % TO WRITE %
-
 
 % Decide whether are you using supervised or unsupervised learning? What algorithm should be preferred for your team? %
 % Decide the split ratio of the training/test dataset such as 70:30 or 80:20? %
