@@ -1,14 +1,29 @@
 \section{Data Preprocessing}\label{data_preprocessing}
 
-This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis.
+This section encompasses various preparatory procedures aimed at optimizing the data for subsequent analysis. 
 
-\begin{description}[style=nextline]
-    \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
-    \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
-    \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
-    \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
-    \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
-\end{description}
+\subsection{Dataset}\label{dataset_given}
+
+The dataset encompasses a singular class and fifteen distinctive features. Among these, the feature designated as "CIR" notably consists of 1016 subfeatures. The features are as follows:
+
+\begin{itemize}
+    \item \textbf{Range:} reflects the distance from the transmitter to the receiver.
+    \item \textbf{FP\_IDX:} represents the index of the first path.
+    \item \textbf{FP\_AMP1, FP\_AMP2, and FP\_AMP3:} indicate the amplitude of the first path signal, providing data for the direct signal path.
+    \item \textbf{STDEV\_NOISE:} denotes the standard deviation of noise, a measure of noise variability.
+    \item \textbf{CIR\_PWR:} measures the total power found within the channel impulse response, offering a summary of received signal strength.
+    \item \textbf{MAX\_NOISE and RXPACC:} serve as metrics for the highest noise level and the accuracy of the receiver's signal processing, respectively.
+    \item \textbf{CH, FRAME\_LEN, PREAM\_LEN, BITRATE, and PRFR:} are features associated with the communication protocol parameters. They include the channel number, frame length, preamble length, bitrate, and pulse repetition frequency.
+    \item \textbf{CIRO-CIR1015:} contains sequential or time-series data points, an extensive collection that forms part of the channel impulse response data.
+\end{itemize}
+
+% \begin{description}[style=nextline]
+%     \item[Feature Extraction:] Identification and extraction of pertinent features from the dataset.
+%     \item[Feature Derivation:] Derivation of new features from existing ones to enhance predictive power.
+%     \item[Feature Reduction:] Reduction of feature dimensionality to mitigate computational complexity.
+%     \item[De-Noise Functions:] Application of functions to remove noise and enhance data quality.
+%     \item[Justifications of Processes:] Explanations substantiating the rationale behind each preprocessing step.
+% \end{description}
 
 \subsection{Feature Extraction}\label{feature_extraction}
 
