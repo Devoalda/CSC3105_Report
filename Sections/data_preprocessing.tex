@@ -4,17 +4,17 @@ This section encompasses various preparatory procedures aimed at optimizing the 
 
 \subsection{Dataset}\label{dataset_given}
 
-The dataset encompasses a singular class and fifteen distinctive features. Among these, the feature designated as "CIR" notably consists of 1016 subfeatures. The features are as follows:
+The dataset encompasses a singular class and fifteen distinctive features. Among these, the feature designated as "\acrshort{cir}" notably consists of 1016 subfeatures. The features are as follows:
 
 \begin{itemize}
     \item \textbf{Range:} reflects the distance from the transmitter to the receiver.
     \item \textbf{FP\_IDX:} represents the index of the first path.
     \item \textbf{FP\_AMP1, FP\_AMP2, and FP\_AMP3:} indicate the amplitude of the first path signal, providing data for the direct signal path.
     \item \textbf{STDEV\_NOISE:} denotes the standard deviation of noise, a measure of noise variability.
-    \item \textbf{CIR\_PWR:} measures the total power found within the channel impulse response, offering a summary of received signal strength.
+    \item \textbf{CIR\_PWR:} measures the total power found within the \acrshort{cir}, offering a summary of received signal strength.
     \item \textbf{MAX\_NOISE and RXPACC:} serve as metrics for the highest noise level and the accuracy of the receiver's signal processing, respectively.
     \item \textbf{CH, FRAME\_LEN, PREAM\_LEN, BITRATE, and PRFR:} are features associated with the communication protocol parameters. They include the channel number, frame length, preamble length, bitrate, and pulse repetition frequency.
-    \item \textbf{CIRO-CIR1015:} contains sequential or time-series data points, an extensive collection that forms part of the channel impulse response data.
+    \item \textbf{CIRO-CIR1015:} contains sequential or time-series data points, an extensive collection that forms part of the \acrshort{cir} data.
 \end{itemize}
 
 % \begin{description}[style=nextline]
@@ -36,7 +36,7 @@ This section delineates the derivation of essential features from the Decawave U
 
 \subsubsection{First Path Power Level}\label{first_path_power_level}
 
-The First Path Power Level represents the strength of the primary signal path in the received Channel Impulse Response (\acrshort{cir}). It is calculated using the following equation:
+The First Path Power Level represents the strength of the primary signal path in the received \acrshort{cir}. It is calculated using the following equation:
 
 \begin{equation}
   \text{First Path Power Level} = 10 \cdot \log_{10} \left( \frac{F_1^2 + F_2^2 + F_3^2}{N^2} \right) - A
@@ -47,7 +47,7 @@ where:
 \begin{itemize}
   \item $F_i$ (Current variable name: $FP\_AMPi$): Amplitude of the $i^{th}$ peak in the \acrshort{cir} ($i = 1, 2, 3$)
   \item $N$ (Current variable name: $RXPACC$): Receiver path accumulation length
-  \item $A$ (Current variable name: $PRFR$):Pulse Repetition Frequncy Rate (typically 64)
+  \item $A$ (Current variable name: $PRFR$): Pulse Repetition Frequncy Rate (typically 64)
 \end{itemize}
 
 \subsubsection{RX Level}\label{rx_level}
@@ -65,7 +65,7 @@ The RX Level metric assesses the received signal strength relative to the receiv
 where:
 
 \begin{itemize}
-  \item $C$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $C$ (Current variable name: $CIR\_PWR$): Power of the received \acrshort{cir}
   \item $N$ (Current variable name: $RXPACC$): Receiver path accumulation length
   \item $PRFR$ (Current variable name unchanged): Pulse Repetition Frequency Rate in MHz
 \end{itemize}
@@ -84,11 +84,11 @@ The Signal-to-Noise Ratio (SNR) is a metric used to quantify the quality of the 
 where:
 
 \begin{itemize}
-  \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received Channel Impulse Response
+  \item $P_{cir}$ (Current variable name: $CIR\_PWR$): Power of the received \acrshort{cir}
   \item $\sigma_n$ (Current variable name $STDEV\_NOISE$): Standard deviation of the noise
 \end{itemize}
 
-The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}
+The SNR provides valuable insight into the reliability of the received signal amidst background noise. A visual representation of the SNR calculated is shown at Figure \ref{fig:snr}.
 
 \subsection{Feature Reduction}\label{feature_reduction}
 During the dataset refinement phase, we removed attributes that displayed uniform values for all records. This entailed discarding Channel Information (CH), which was invariably recorded as 2, BITRATE, which consistently maintained a value of 110, Pulse Repetition Frequency Rate (PRFR), perpetually set at 64, and Preamble Length (PREAM\_LEN), uniformly established at 1024.
@@ -166,7 +166,7 @@ def deconvolve_cir(cir_values, psf=None, iterations=50):
     return deconvolved_cir
 \end{verbatim}
 
-This function takes circular (shifted) impulse response (\acrshort{cir}) values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved \acrshort{cir}.
+This function takes shifted \acrshort{cir} values as input and performs Richardson-Lucy deconvolution. If no PSF is provided, a simple one is created. The number of iterations can also be specified. The result is the deconvolved \acrshort{cir}.
 
 A visualization depicting the frequency graph of the wavelet-transformed \acrshort{los} and \acrshort{nlos} signals is presented in Section \ref{frequency_graph_lr}. Notably, Figure \ref{fig:frequency_graph_lr} exhibits an almost linear trend across the graph, suggesting a potential misapplication of the underlying function. Conversely, Figure \ref{fig:frequency_graph_lr_scaled} portrays a cleaned and scaled rendition of the frequency graph. Despite its improved clarity, this visualization was omitted from the Data Mining phase due to its notably low variance, as evidenced by both figures.
 
@@ -175,7 +175,7 @@ A visualization depicting the frequency graph of the wavelet-transformed \acrsho
 The \acrshort{dft} serves as a pivotal tool in machine learning projects aimed at signal processing, particularly in predicting the presence of \acrshort{los} or \acrshort{nlos} conditions from a dataset. In this context, the \acrshort{dft} aids in analyzing the frequency characteristics of signals transmitted over wireless channels, offering crucial insights into channel behavior. Inspired by \cite{8682194}, we wanted to perform \acrshort{dft}, followed by training a \Gls{Convolutional Neural Network} and \Gls{Multilayer Perceptron} model in hopes of a better accuracy, after performing training on the wavelet-transformed \acrshort{cir} data.
 
 \begin{itemize}
-    \item \textbf{Data Extraction:} Initially, the dataset containing Channel Impulse Response (\acrshort{cir}) values is processed. \acrshort{cir} values, representing the response of the wireless channel to an impulse signal, are extracted from the dataset. These values serve as the input for subsequent DFT computations.
+    \item \textbf{Data Extraction:} Initially, the dataset containing \acrshort{cir} values is processed. \acrshort{cir} values, representing the response of the wireless channel to an impulse signal, are extracted from the dataset. These values serve as the input for subsequent DFT computations.
     
     \item \textbf{\acrshort{dft} Computation:} The \acrshort{dft} is computed on the extracted \acrshort{cir} sequence utilizing the \texttt{numpy.fft.fft} (Fast Fourier Transform) function. Specifically, the \acrshort{dft} calculation is executed along the second axis (columns) of the data array, ensuring that frequency analysis is performed accurately.
     

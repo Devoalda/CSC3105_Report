@@ -50,7 +50,7 @@ Moreover, techniques like Lucy-Richardson Deconvolution can be utilized to mitig
   \caption{Frequency Graph of Wavelet Transformed LOS and NLOS}\label{fig:frequency_graph_wavelet}
 \end{figure}
 
-A comparison between the original and denoised NLOS Channel Impulse Response (\acrshort{cir}) graphs reveals distinct differences. The original NLOS graph exhibits notable noise, characterized by fluctuations in magnitude, which can potentially obscure the underlying signal. In contrast, the denoised NLOS graph, resulting from successful wavelet denoising, presents a smoother profile, effectively removing noise while preserving the essential features of the signal.
+A comparison between the original and denoised NLOS \acrshort{cir} graphs reveals distinct differences. The original NLOS graph exhibits notable noise, characterized by fluctuations in magnitude, which can potentially obscure the underlying signal. In contrast, the denoised NLOS graph, resulting from successful wavelet denoising, presents a smoother profile, effectively removing noise while preserving the essential features of the signal.
 
 Both the original and denoised LOS and NLOS \acrshort{cir} graphs demonstrate suitability for training Convolutional Neural Networks (CNNs) and Multi-Layer Perceptrons (MLPs). However, to enhance model performance, data pre-processing is recommended. 
 
@@ -83,7 +83,7 @@ By integrating these pre-processing techniques into the workflow and transformin
 % By incorporating Lucy-Richardson scaled frequency data into the training process, we can significantly elevate the performance of CNNs and MLPs. Such a nuanced spectral perspective equips these models to capture the essence of the signal propagation characteristics, distinguishing LOS from NLOS with higher accuracy. Ultimately, this paves the way for more resilient communication systems that can navigate and adapt to complex environmental dynamics.
 
 % REFINED ver @ jwisgay, is this better? %
-Lucy-Richardson deconvolution significantly refines Channel Impulse Response (CIR) data for LOS and NLOS scenarios, providing enriched frequency domain representations that are key for robust differentiation by advanced machine learning models such as CNNs and MLPs. This technique reveals the deeper spectral characteristics of communication channels, diminishing distortive effects and allowing for the extraction of intricate patterns, thus facilitating more accurate signal classification and channel estimation tasks. Incorporating such scaled frequency data elevates model performance, capturing essential signal propagation nuances to distinguish LOS from NLOS scenarios more precisely, fostering the development of adaptive, resilient communication systems.
+Lucy-Richardson deconvolution significantly refines \acrshort{cir} data for LOS and NLOS scenarios, providing enriched frequency domain representations that are key for robust differentiation by advanced machine learning models such as CNNs and MLPs. This technique reveals the deeper spectral characteristics of communication channels, diminishing distortive effects and allowing for the extraction of intricate patterns, thus facilitating more accurate signal classification and channel estimation tasks. Incorporating such scaled frequency data elevates model performance, capturing essential signal propagation nuances to distinguish LOS from NLOS scenarios more precisely, fostering the development of adaptive, resilient communication systems.
 
 However, the practical application of Lucy-Richardson scaling is complex. Its computationally intensive nature could impose significant demands on resources, particularly for larger datasets, leading to prolonged training times. This complexity, coupled with the potential for overfitting and the introduction of artifacts or loss of crucial time-domain information, requires careful deliberation. Additionally, this sophisticated signal processing necessitates specialized knowledge and tools, presenting a barrier to its routine implementation in training protocols. While the benefits of incorporating this scaled data are clear, the constraints of computational cost, model complexity, and domain-specific suitability must be judiciously weighed to determine the technique's feasibility in enhancing machine learning frameworks.
 % end of check - help check jwisgay %
@@ -97,9 +97,9 @@ However, the practical application of Lucy-Richardson scaling is complex. Its co
   \caption{Frequency Graph of Discrete Fourier Transformed \acrshort{cir} values (LOS and NLOS)}\label{fig:frequency_graph_dft}
 \end{figure}
 
-The figures display the outcome of applying the Discrete Fourier Transform (DFT) to the original Channel Impulse Response (CIR) data. DFT converts the signal from the time domain (original graph) to the frequency domain (DFT graph), revealing where the signal energy lies across different frequencies.
+The figures display the outcome of applying the Discrete Fourier Transform (DFT) to the original \acrshort{cir} data. DFT converts the signal from the time domain (original graph) to the frequency domain (DFT graph), revealing where the signal energy lies across different frequencies.
 
-The original CIR data shows signal strength over time, while the DFT plots uncover which frequencies carry the most significant signal power. This preprocessing step is vital for CNN and MLP models because they excel at identifying patterns within data. By presenting CIR data in the frequency domain, DFT highlights these patterns, simplifying the learning process for models and potentially enhancing performance in tasks such as signal (\gls{los} / \gls{nlos}) classification.
+The original \acrshort{cir} data shows signal strength over time, while the DFT plots uncover which frequencies carry the most significant signal power. This preprocessing step is vital for CNN and MLP models because they excel at identifying patterns within data. By presenting \acrshort{cir} data in the frequency domain, DFT highlights these patterns, simplifying the learning process for models and potentially enhancing performance in tasks such as signal (\gls{los} / \gls{nlos}) classification.
 
 \subsubsection{Signal to Noise Ratio}\label{snr_visual}
 
@@ -111,7 +111,7 @@ The original CIR data shows signal strength over time, while the DFT plots uncov
 
 This graph displays the Signal-to-Noise Ratio (SNR) for both LOS (Line-of-Sight) and NLOS (Non-Line-of-Sight) scenarios.  A higher SNR indicates a stronger signal relative to noise. The graph confirms a stronger signal in the LOS case.
 
-While the SNR itself is informative for channel classification or quality estimation, the raw SNR graph might not be ideal for training models like CNNs and MLPs. These models typically prefer raw data (like the original CIR data) to learn features themselves. So, the original CIR data might be more suitable for training compared to just the extracted SNR value.
+While the SNR itself is informative for channel classification or quality estimation, the raw SNR graph might not be ideal for training models like CNNs and MLPs. These models typically prefer raw data (like the original \acrshort{cir} data) to learn features themselves. So, the original \acrshort{cir} data might be more suitable for training compared to just the extracted SNR value.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CNN Visualisation 
